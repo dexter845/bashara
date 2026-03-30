@@ -11,34 +11,98 @@
   "type": "header",
   "name": "Header",
   "sections": {
-    "header_announcements_9jGBFp": {
-      "type": "header-announcements",
+    "marquee_BWMqep": {
+      "type": "marquee",
       "blocks": {
-        "announcement_BxgCk9": {
-          "type": "_announcement",
+        "divider_LYCYVH": {
+          "type": "_divider",
+          "name": "t:names.divider",
           "settings": {
-            "text": "Welcome to our store",
-            "link": "",
-            "font": "var(--font-subheading--family)",
+            "thickness": 1,
+            "corner_radius": "square",
+            "width_percent": 83,
+            "padding-block-start": 0,
+            "padding-block-end": 0
+          },
+          "blocks": {}
+        },
+        "text_k3AUiH": {
+          "type": "text",
+          "name": "t:names.text",
+          "settings": {
+            "text": "<p>Korean Skincare Now Available</p>",
+            "width": "fit-content",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "custom",
+            "font": "var(--font-body--family)",
             "font_size": "0.75rem",
-            "weight": "",
+            "line_height": "normal",
             "letter_spacing": "normal",
-            "case": "none"
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "divider_TXmt4g": {
+          "type": "_divider",
+          "name": "t:names.divider",
+          "settings": {
+            "thickness": 1,
+            "corner_radius": "square",
+            "width_percent": 83,
+            "padding-block-start": 0,
+            "padding-block-end": 0
+          },
+          "blocks": {}
+        },
+        "text_7cetGx": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Free Shipping on Orders Over $50</p>",
+            "width": "fit-content",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "custom",
+            "font": "var(--font-body--family)",
+            "font_size": "0.75rem",
+            "line_height": "tight",
+            "letter_spacing": "tight",
+            "case": "none",
+            "wrap": "nowrap",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
           },
           "blocks": {}
         }
       },
       "block_order": [
-        "announcement_BxgCk9"
+        "divider_LYCYVH",
+        "text_k3AUiH",
+        "divider_TXmt4g",
+        "text_7cetGx"
       ],
-      "name": "t:names.announcement_bar",
+      "name": "t:names.marquee_section",
       "settings": {
-        "speed": 5,
-        "section_width": "page-width",
-        "color_scheme": "scheme-1",
-        "divider_width": 1,
-        "padding-block-start": 15,
-        "padding-block-end": 15
+        "movement_direction": "normal",
+        "color_scheme": "scheme-5",
+        "padding-block-start": 10,
+        "padding-block-end": 10,
+        "gap_between_elements": 100
       }
     },
     "header_section": {
@@ -81,8 +145,9 @@
       },
       "settings": {
         "logo_position": "left",
-        "menu_position": "left",
+        "menu_position": "center",
         "menu_row": "top",
+        "customer_account_menu": "customer-account-main-menu",
         "show_search": true,
         "search_position": "right",
         "search_row": "top",
@@ -99,6 +164,10 @@
         "divider_width": 0,
         "divider_size": "page-width",
         "border_width": 0,
+        "actions_display_style": "icon",
+        "actions_font_size": "0.875rem",
+        "actions_font": "body",
+        "actions_text_case": "none",
         "color_scheme_top": "scheme-1",
         "color_scheme_bottom": "",
         "color_scheme_transparent": "scheme-6",
@@ -112,7 +181,7 @@
     }
   },
   "order": [
-    "header_announcements_9jGBFp",
+    "marquee_BWMqep",
     "header_section"
   ]
 }
