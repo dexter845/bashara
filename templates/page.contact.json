@@ -6,11 +6,38 @@
  * or related systems. Please exercise caution as any changes
  * made to this file may be overwritten.
  * ------------------------------------------------------------
- */{
+ */
+{
   "sections": {
     "main": {
       "type": "main-page",
       "blocks": {
+        "text_99Jy6M": {
+          "type": "text",
+          "name": "t:names.text",
+          "settings": {
+            "text": "<p>GET IN TOUCH</p>",
+            "width": "100%",
+            "max_width": "normal",
+            "alignment": "center",
+            "type_preset": "rte",
+            "font": "var(--font-body--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
         "title": {
           "type": "text",
           "name": "t:names.title",
@@ -41,9 +68,9 @@
           "type": "text",
           "name": "t:names.content",
           "settings": {
-            "text": "{{ closest.page.content }}",
+            "text": "<p>Have a question? We'd love to hear from you. Send us a message and we'll respond as soon as possible.</p>",
             "width": "100%",
-            "max_width": "narrow",
+            "max_width": "normal",
             "alignment": "center",
             "type_preset": "rte",
             "font": "var(--font-primary--family)",
@@ -65,15 +92,16 @@
         }
       },
       "block_order": [
+        "text_99Jy6M",
         "title",
         "content"
       ],
       "settings": {
         "content_direction": "column",
-        "gap": 32,
-        "color_scheme": "",
-        "padding-block-start": 40,
-        "padding-block-end": 0
+        "gap": 31,
+        "color_scheme": "scheme-3ac03c70-0d83-4221-a3e2-239b4c57eb5d",
+        "padding-block-start": 50,
+        "padding-block-end": 50
       }
     },
     "form": {
