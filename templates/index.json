@@ -271,7 +271,6 @@
                       "name": "t:names.icon",
                       "settings": {
                         "icon": "check_box",
-                        "image_upload": "shopify://shop_images/Icon_1.png",
                         "width": 16,
                         "link": "",
                         "open_in_new_tab": false
@@ -355,7 +354,6 @@
                       "name": "t:names.icon",
                       "settings": {
                         "icon": "check_box",
-                        "image_upload": "shopify://shop_images/Icon_1.png",
                         "width": 16,
                         "link": "",
                         "open_in_new_tab": false
@@ -439,7 +437,6 @@
                       "name": "t:names.icon",
                       "settings": {
                         "icon": "check_box",
-                        "image_upload": "shopify://shop_images/Icon_1.png",
                         "width": 16,
                         "link": "",
                         "open_in_new_tab": false
@@ -497,7 +494,6 @@
         "image_nG6UFL": {
           "type": "image",
           "settings": {
-            "image": "shopify://shop_images/Image_Hero_image.png",
             "link": "",
             "image_ratio": "adapt",
             "width": "custom",
@@ -704,7 +700,8 @@
           "loreal",
           "huda-beauty",
           "sisley-paris",
-          "cera-ve"
+          "cera-ve",
+          "frontpage"
         ],
         "layout_type": "grid",
         "carousel_on_mobile": true,
