@@ -495,7 +495,7 @@
           "type": "email-signup",
           "settings": {
             "width": "custom",
-            "custom_width": 33,
+            "custom_width": 40,
             "inherit_color_scheme": true,
             "color_scheme": "",
             "heading": "",
