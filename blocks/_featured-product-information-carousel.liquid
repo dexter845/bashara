@@ -34,7 +34,7 @@
           "label": "t:options.landscape"
         }
       ],
-      "default": "adapt"
+      "default": "1/1.25"
     },
     {
       "type": "checkbox",
@@ -64,16 +64,16 @@
       "id": "media_radius",
       "label": "t:settings.border_radius",
       "min": 0,
-      "max": 32,
+      "max": 40,
       "step": 1,
       "unit": "px",
-      "default": 4
+      "default": 28
     },
     {
       "type": "checkbox",
       "id": "extend_media",
       "label": "t:settings.extend_media_to_screen_edge",
-      "default": true,
+      "default": false,
       "visible_if": "{{ section.settings.content_width == 'content-center-aligned' }}"
     },
     {
@@ -139,7 +139,8 @@
           "value": "thumbnails",
           "label": "t:options.thumbnails"
         }
-      ]
+      ],
+      "default": "thumbnails"
     },
     {
       "type": "select",
@@ -162,7 +163,8 @@
           "value": "thumbnails",
           "label": "t:options.thumbnails"
         }
-      ]
+      ],
+      "default": "dots"
     },
     {
       "type": "header",
@@ -195,10 +197,10 @@
       "id": "thumbnail_width",
       "label": "t:settings.width_desktop",
       "min": 44,
-      "max": 72,
+      "max": 120,
       "step": 1,
       "unit": "px",
-      "default": 64,
+      "default": 108,
       "visible_if": "{{ block.settings.slideshow_controls_style == 'thumbnails' }}"
     },
     {
@@ -209,8 +211,18 @@
       "max": 50,
       "step": 1,
       "unit": "px",
-      "default": 0,
+      "default": 16,
       "visible_if": "{{ block.settings.slideshow_controls_style == 'thumbnails' or block.settings.slideshow_mobile_controls_style == 'thumbnails' }}"
+    },
+    {
+      "type": "range",
+      "id": "image_gap",
+      "label": "t:settings.gap",
+      "min": 0,
+      "max": 100,
+      "unit": "px",
+      "step": 1,
+      "default": 0
     },
     {
       "type": "header",
@@ -259,7 +271,20 @@
   ],
   "presets": [
     {
-      "name": "t:names.product_media"
+      "name": "t:names.product_media",
+      "settings": {
+        "aspect_ratio": "1/1.25",
+        "constrain_to_viewport": false,
+        "media_radius": 28,
+        "extend_media": false,
+        "zoom": true,
+        "slideshow_controls_style": "thumbnails",
+        "slideshow_mobile_controls_style": "dots",
+        "thumbnail_position": "bottom",
+        "thumbnail_width": 108,
+        "thumbnail_radius": 16,
+        "image_gap": 0
+      }
     }
   ]
 }

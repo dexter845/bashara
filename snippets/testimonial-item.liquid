@@ -1,0 +1,48 @@
+<div class="testimonial__item {% if slider %} swiper-slide {% endif %}" {{ block.shopify_attributes }}  >
+  <div class="testimonial__item__content">
+    <div class="testimonial__item__content__inner">
+      <div class="testimonial__item__content__header">
+        <div class="testimonial__item__content__header__stars">
+        {% for i in (1..block.settings.rating) %}
+          <span class="testimonial__item__content__header__star">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M6.72292 1.33804C6.74848 1.28639 6.78797 1.24291 6.83693 1.21252C6.88589 1.18212 6.94237 1.16602 7 1.16602C7.05763 1.16602 7.11411 1.18212 7.16307 1.21252C7.21203 1.24291 7.25152 1.28639 7.27709 1.33804L8.62459 4.06745C8.71336 4.2471 8.84439 4.40252 9.00645 4.52038C9.16851 4.63824 9.35674 4.71502 9.555 4.74412L12.5685 5.18512C12.6256 5.19339 12.6792 5.21748 12.7234 5.25465C12.7675 5.29183 12.8003 5.34061 12.8182 5.39547C12.836 5.45034 12.8382 5.50911 12.8243 5.56512C12.8105 5.62114 12.7813 5.67218 12.74 5.71245L10.5607 7.83462C10.4169 7.97468 10.3094 8.14757 10.2473 8.3384C10.1852 8.52924 10.1705 8.73231 10.2043 8.93012L10.7188 11.9285C10.7288 11.9855 10.7227 12.0443 10.701 12.098C10.6793 12.1518 10.6429 12.1983 10.596 12.2324C10.5491 12.2664 10.4936 12.2866 10.4358 12.2906C10.3779 12.2947 10.3202 12.2824 10.269 12.2551L7.57517 10.8388C7.39767 10.7456 7.20019 10.6969 6.99971 10.6969C6.79923 10.6969 6.60175 10.7456 6.42425 10.8388L3.731 12.2551C3.67986 12.2822 3.62215 12.2944 3.56443 12.2903C3.50671 12.2862 3.4513 12.2659 3.40451 12.2319C3.35771 12.1979 3.3214 12.1514 3.29972 12.0977C3.27803 12.0441 3.27184 11.9854 3.28184 11.9285L3.79575 8.9307C3.8297 8.7328 3.81499 8.5296 3.7529 8.33865C3.69081 8.14769 3.58319 7.97471 3.43934 7.83462L1.26 5.71304C1.21835 5.67281 1.18883 5.62168 1.17481 5.5655C1.1608 5.50931 1.16284 5.45031 1.18071 5.39523C1.19859 5.34015 1.23157 5.29119 1.27591 5.25394C1.32025 5.21669 1.37416 5.19264 1.4315 5.18454L4.44442 4.74412C4.6429 4.71524 4.8314 4.63857 4.99368 4.5207C5.15596 4.40282 5.28716 4.24728 5.376 4.06745L6.72292 1.33804Z" fill="#F5C462" stroke="#F5C462" stroke-width="1.16667" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        {% endfor %}
+        </div>
+        {% if block.settings.is_verified %}
+          <span class="testimonial__item__content__header__verified">Verified purchase</span>
+        {% endif %}
+      </div>
+
+      <div class="testimonial__item__content__body">
+        {% if block.settings.title %}
+          <span class="testimonial__item__content__body__title">{{ block.settings.title }}</span>
+        {% endif %}
+        {% if block.settings.description %}
+          <span class="testimonial__item__content__body__description">{{ block.settings.description }}</span>
+        {% endif %}
+      </div>
+
+      <div class="testimonial__item__content__footer">
+        <div class="testimonial__item__content__footer__author">
+          <div class="testimonial__item__content__footer__author__image">
+            {% if block.settings.author_image %}
+              <img src="{{ block.settings.author_image | image_url: width: 100 }}" alt="{{ block.settings.author_name }}" width="100" height="100">
+            {% endif %}
+          </div>
+          <div class="testimonial__item__content__footer__author__info">
+            {% if block.settings.author_name %}
+              <span class="testimonial__item__content__footer__author__info__name">{{ block.settings.author_name }}</span>
+            {% endif %}
+            {% if block.settings.author_address %}
+              <span class="testimonial__item__content__footer__author__info__address">{{ block.settings.author_address }}</span>
+            {% endif %}
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

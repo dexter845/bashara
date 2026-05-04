@@ -1,0 +1,322 @@
+{% assign s = block.settings %}
+
+<div
+  class="
+    faq-accordion
+    spacing-style
+    size-style
+    {% if s.inherit_color_scheme == false %} color-{{ s.color_scheme }}{% endif %}
+  "
+  style="
+    {% render 'spacing-style', settings: block.settings %}
+    {% render 'size-style', settings: block.settings %}
+    --faq-card-radius: {{ s.card_corner_radius }}px;
+    --faq-card-padding: {{ s.card_padding }}px;
+    --faq-row-gap: {{ s.row_gap }}px;
+    {% if s.card_background != blank and s.card_background != 'rgba(0,0,0,0)' %}
+      --faq-card-bg: {{ s.card_background }};
+    {% endif %}
+    {% if s.toggle_icon_color != blank and s.toggle_icon_color != 'rgba(0,0,0,0)' %}
+      --faq-toggle-color: {{ s.toggle_icon_color }};
+    {% endif %}
+  "
+  {{ block.shopify_attributes }}
+>
+  <div class="faq-accordion__list">
+    {% content_for 'blocks' %}
+  </div>
+</div>
+
+{% stylesheet %}
+   .faq-accordion {
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .faq-accordion__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--faq-row-gap, var(--gap-md));
+  }
+
+  .faq-accordion__list > * {
+    margin: 0;
+  }
+
+  .faq-accordion .faq-accordion__details {
+    margin: 0;
+    background: var(--faq-card-bg, var(--color-input-background));
+    border-radius: var(--faq-card-radius, var(--style-border-radius-lg));
+    overflow: hidden;
+    box-shadow: 0 1px 2px rgb(var(--color-shadow-rgb, 0 0 0) / 0.06);
+  }
+
+  .faq-accordion .faq-accordion__summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--gap-md);
+    padding: var(--faq-card-padding, var(--padding-xl));
+    list-style: none;
+    cursor: pointer;
+    font-family: var(--font-body--family);
+    font-style: var(--font-body--style);
+    font-weight: 600;
+    font-size: var(--font-size--body-md);
+    line-height: 1.35;
+    color: var(--color-foreground);
+    min-height: var(--minimum-touch-target);
+  }
+
+  .faq-accordion .faq-accordion__summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq-accordion .faq-accordion__question {
+    flex: 1;
+    min-width: 0;
+    text-align: start;
+  }
+
+  .faq-accordion .faq-accordion__icon {
+    flex-shrink: 0;
+    margin-inline-start: auto;
+    width: 0.875rem;
+    height: 0.875rem;
+    color: var(--faq-toggle-color, var(--color-primary));
+  }
+
+  .faq-accordion .faq-accordion__icon svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .faq-accordion .faq-accordion__answer {
+    padding-inline: var(--faq-card-padding, var(--padding-xl));
+    padding-block: 0 var(--faq-card-padding, var(--padding-xl));
+    margin: 0;
+    color: rgb(var(--color-foreground-rgb) / 0.72);
+    font-size: 0.95em;
+    line-height: 1.55;
+  }
+
+  .faq-accordion .faq-accordion__answer :first-child {
+    margin-top: 0;
+  }
+
+  .faq-accordion .faq-accordion__answer :last-child {
+    margin-bottom: 0;
+  }
+
+  .faq-accordion__details[open] .faq-accordion__answer {
+    padding-top: 0;
+    margin-top: calc(-1 * var(--margin-xs));
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "FAQ accordion",
+  "tag": null,
+  "blocks": [
+    {
+      "type": "_faq-accordion-row"
+    }
+  ],
+  "settings": [
+    {
+      "type": "header",
+      "content": "Cards"
+    },
+    {
+      "type": "range",
+      "id": "row_gap",
+      "label": "Space between items",
+      "min": 8,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "card_corner_radius",
+      "label": "Card corner radius",
+      "min": 8,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "card_padding",
+      "label": "Card inner padding",
+      "min": 16,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 26
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Card background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "toggle_icon_color",
+      "label": "Plus / minus icon"
+    },
+    {
+      "type": "header",
+      "content": "Color"
+    },
+    {
+      "type": "checkbox",
+      "id": "inherit_color_scheme",
+      "label": "Inherit section color scheme",
+      "default": true
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1",
+      "visible_if": "{{ block.settings.inherit_color_scheme == false }}"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "width",
+      "label": "Width (desktop)",
+      "options": [
+        { "value": "fit-content", "label": "Fit" },
+        { "value": "custom", "label": "Custom" }
+      ],
+      "default": "custom"
+    },
+    {
+      "type": "range",
+      "id": "custom_width",
+      "label": "Custom width",
+      "min": 50,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 100,
+      "visible_if": "{{ block.settings.width == 'custom' }}"
+    },
+    {
+      "type": "select",
+      "id": "width_mobile",
+      "label": "Width (mobile)",
+      "options": [
+        { "value": "fit-content", "label": "Fit" },
+        { "value": "custom", "label": "Custom" }
+      ],
+      "default": "custom"
+    },
+    {
+      "type": "range",
+      "id": "custom_width_mobile",
+      "label": "Custom width (mobile)",
+      "min": 50,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 100,
+      "visible_if": "{{ block.settings.width_mobile == 'custom' }}"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start",
+      "label": "Left",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end",
+      "label": "Right",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ accordion",
+      "category": "t:categories.text",
+      "blocks": {
+        "row_1": {
+          "type": "_faq-accordion-row",
+          "settings": {
+            "question": "What is your shipping policy?",
+            "answer": "<p>We offer free shipping on all orders over $50. Standard shipping takes 3-5 business days, and express shipping is available for an additional fee.</p>",
+            "open_by_default": true
+          }
+        },
+        "row_2": {
+          "type": "_faq-accordion-row",
+          "settings": {
+            "question": "What is your return policy?",
+            "answer": "<p></p>",
+            "open_by_default": false
+          }
+        },
+        "row_3": {
+          "type": "_faq-accordion-row",
+          "settings": {
+            "question": "Are your products cruelty-free?",
+            "answer": "<p></p>",
+            "open_by_default": false
+          }
+        },
+        "row_4": {
+          "type": "_faq-accordion-row",
+          "settings": {
+            "question": "How do I track my order?",
+            "answer": "<p></p>",
+            "open_by_default": false
+          }
+        }
+      },
+      "block_order": ["row_1", "row_2", "row_3", "row_4"]
+    }
+  ]
+}
+{% endschema %}

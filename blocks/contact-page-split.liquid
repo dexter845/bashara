@@ -1,0 +1,764 @@
+{%- doc -%}
+  Two-column contact: form + details. Icons: assets/email.png, phone.png, location.png.
+{%- enddoc -%}
+
+{%- liquid
+  assign form_id = 'ContactSplit-' | append: section.id | append: '-' | append: block.id
+-%}
+
+<div
+  class="
+    contact-page-split
+    spacing-style
+    size-style
+    {% if block.settings.inherit_color_scheme == false %} color-{{ block.settings.color_scheme }}{% endif %}
+  "
+  style="
+    {% render 'spacing-style', settings: block.settings %}
+    {% render 'size-style', settings: block.settings %}
+    {% if block.settings.input_border_override != blank and block.settings.input_border_override != 'rgba(0,0,0,0)' %}
+      --contact-input-border: {{ block.settings.input_border_override }};
+    {% endif %}
+    {% if block.settings.input_background_override != blank and block.settings.input_background_override != 'rgba(0,0,0,0)' %}
+      --contact-input-bg: {{ block.settings.input_background_override }};
+    {% endif %}
+  "
+  {{ block.shopify_attributes }}
+>
+  <div class="contact-page-split__grid">
+    <div class="contact-page-split__col contact-page-split__col--form">
+      {%- if block.settings.heading_form != blank -%}
+        <h2 class="contact-page-split__title">{{ block.settings.heading_form | escape }}</h2>
+      {%- endif -%}
+
+      {%- form 'contact', id: form_id, class: 'contact-page-split__form' -%}
+        <input type="hidden" name="contact[id]" value="{{ form_id }}">
+        <input type="hidden" name="contact[name]" id="{{ form_id }}-name-combined" value="">
+
+        {%- if form.errors and form.id == form_id -%}
+          <div class="contact-page-split__alert contact-page-split__alert--error" tabindex="-1" autofocus>
+            {{- 'icon-error.svg' | inline_asset_content -}}
+            <span>{{ form.errors.translated_fields.email | default: 'Email' | capitalize }} {{ form.errors.messages.email }}</span>
+          </div>
+        {%- endif -%}
+        {%- if form.posted_successfully? and form.id == form_id -%}
+          <div class="contact-page-split__alert contact-page-split__alert--success" tabindex="-1" autofocus>
+            {{- 'icon-checkmark.svg' | inline_asset_content -}}
+            <span>{{ 'blocks.contact_form.post_success' | t }}</span>
+          </div>
+        {%- endif -%}
+
+        <div class="contact-page-split__row contact-page-split__row--2">
+          <div class="contact-page-split__field">
+            <label class="contact-page-split__label" for="{{ form_id }}-first">{{ block.settings.label_first | escape }}</label>
+            <input type="text" id="{{ form_id }}-first" class="contact-page-split__input" autocomplete="given-name" data-contact-first>
+          </div>
+          <div class="contact-page-split__field">
+            <label class="contact-page-split__label" for="{{ form_id }}-last">{{ block.settings.label_last | escape }}</label>
+            <input type="text" id="{{ form_id }}-last" class="contact-page-split__input" autocomplete="family-name" data-contact-last>
+          </div>
+        </div>
+
+        <div class="contact-page-split__field">
+          <label class="contact-page-split__label" for="{{ form_id }}-email">{{ block.settings.label_email | escape }}</label>
+          <input
+            type="email"
+            id="{{ form_id }}-email"
+            class="contact-page-split__input"
+            name="contact[email]"
+            autocomplete="email"
+            required
+            value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}"
+            {% if form.errors contains 'email' and form.id == form_id %}
+              aria-invalid="true"
+            {% endif %}
+          >
+        </div>
+
+        <div class="contact-page-split__field">
+          <label class="contact-page-split__label" for="{{ form_id }}-phone">{{ block.settings.label_phone | escape }}</label>
+          <input
+            type="tel"
+            id="{{ form_id }}-phone"
+            class="contact-page-split__input"
+            name="contact[phone]"
+            autocomplete="tel"
+            value="{% if form.phone %}{{ form.phone }}{% elsif customer %}{{ customer.phone }}{% endif %}"
+          >
+        </div>
+
+        {%- if block.settings.enable_subject -%}
+          <div class="contact-page-split__field">
+            <label class="contact-page-split__label" for="{{ form_id }}-subject">{{ block.settings.label_subject | escape }}</label>
+            <input type="text" id="{{ form_id }}-subject" class="contact-page-split__input" data-contact-subject>
+          </div>
+        {%- endif -%}
+
+        <div class="contact-page-split__field">
+          <label class="contact-page-split__label" for="{{ form_id }}-body">{{ block.settings.label_message | escape }}</label>
+          <textarea
+            id="{{ form_id }}-body"
+            class="contact-page-split__input contact-page-split__input--textarea"
+            name="contact[body]"
+            rows="8"
+            required
+            data-contact-body
+            placeholder="{{ block.settings.message_placeholder | escape }}"
+          >
+            {{- form.body -}}
+          </textarea>
+        </div>
+
+        <button type="submit" class="button contact-page-split__submit">
+          {{ block.settings.submit_label | escape }}
+        </button>
+      {%- endform -%}
+    </div>
+
+    <div class="contact-page-split__col contact-page-split__col--info">
+      {%- if block.settings.heading_info != blank -%}
+        <h2 class="contact-page-split__title">{{ block.settings.heading_info | escape }}</h2>
+      {%- endif -%}
+
+      <ul class="contact-page-split__info-list list-unstyled" role="list">
+        <li class="contact-page-split__info-row">
+          <div class="contact-page-split__icon-ring" aria-hidden="true">
+            <img
+              src="{{ 'email.png' | asset_url }}"
+              alt=""
+              width="56"
+              height="56"
+              class="contact-page-split__icon-img"
+              loading="lazy"
+              decoding="async"
+            >
+          </div>
+          <div class="contact-page-split__info-body">
+            <h3 class="contact-page-split__tag">{{ block.settings.label_email_block | escape }}</h3>
+            <div class="contact-page-split__detail rte">{{ block.settings.email_body }}</div>
+          </div>
+        </li>
+        <li class="contact-page-split__info-row">
+          <div class="contact-page-split__icon-ring" aria-hidden="true">
+            <img
+              src="{{ 'phone.png' | asset_url }}"
+              alt=""
+              width="56"
+              height="56"
+              class="contact-page-split__icon-img"
+              loading="lazy"
+              decoding="async"
+            >
+          </div>
+          <div class="contact-page-split__info-body">
+            <h3 class="contact-page-split__tag">{{ block.settings.label_phone_block | escape }}</h3>
+            <div class="contact-page-split__detail rte">{{ block.settings.phone_body }}</div>
+          </div>
+        </li>
+        <li class="contact-page-split__info-row">
+          <div class="contact-page-split__icon-ring" aria-hidden="true">
+            <img
+              src="{{ 'location.png' | asset_url }}"
+              alt=""
+              width="56"
+              height="56"
+              class="contact-page-split__icon-img"
+              loading="lazy"
+              decoding="async"
+            >
+          </div>
+          <div class="contact-page-split__info-body">
+            <h3 class="contact-page-split__tag">{{ block.settings.label_office_block | escape }}</h3>
+            <address class="contact-page-split__detail contact-page-split__detail--address rte">{{ block.settings.address_body }}</address>
+          </div>
+        </li>
+      </ul>
+
+      <div
+        class="contact-page-split__hours"
+        style="
+          {% if block.settings.hours_background != blank and block.settings.hours_background != 'rgba(0,0,0,0)' %}--cp-hours-bg: {{ block.settings.hours_background }};{% endif %}
+          {% if block.settings.hours_text != blank and block.settings.hours_text != 'rgba(0,0,0,0)' %}--cp-hours-text: {{ block.settings.hours_text }};{% endif %}
+        "
+      >
+        <p class="contact-page-split__hours-title"><strong>{{ block.settings.hours_heading | escape }}</strong></p>
+        <dl class="contact-page-split__hours-list">
+          <div class="contact-page-split__hours-row">
+            <dt>{{ block.settings.hours_row1_label | escape }}</dt>
+            <dd>{{ block.settings.hours_row1_value | escape }}</dd>
+          </div>
+          <div class="contact-page-split__hours-row">
+            <dt>{{ block.settings.hours_row2_label | escape }}</dt>
+            <dd>{{ block.settings.hours_row2_value | escape }}</dd>
+          </div>
+          <div class="contact-page-split__hours-row">
+            <dt>{{ block.settings.hours_row3_label | escape }}</dt>
+            <dd>{{ block.settings.hours_row3_value | escape }}</dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    var form = document.getElementById('{{ form_id }}');
+    if (!form) return;
+    form.addEventListener('submit', function () {
+      var first = form.querySelector('[data-contact-first]');
+      var last = form.querySelector('[data-contact-last]');
+      var combined = form.querySelector('#{{ form_id }}-name-combined');
+      if (combined && first && last) {
+        combined.value = (first.value + ' ' + last.value).trim();
+      }
+      var subject = form.querySelector('[data-contact-subject]');
+      var body = form.querySelector('[data-contact-body]');
+      if (subject && body && subject.value.trim() !== '') {
+        body.value = 'Subject: ' + subject.value.trim() + '\n\n' + body.value;
+      }
+    });
+  })();
+</script>
+
+{% stylesheet %}
+  .contact-page-split__grid {
+    display: grid;
+    gap: var(--gap-2xl);
+    align-items: start;
+  }
+
+  @media screen and (min-width: 990px) {
+    .contact-page-split__grid {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--gap-3xl);
+    }
+  }
+
+  .contact-page-split__title {
+    margin: 0 0 var(--margin-lg);
+    font-weight: 600;
+    color: var(--color-foreground-muted, rgb(var(--color-foreground-rgb) / 0.78));
+  }
+
+  .contact-page-split__form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-md);
+  }
+
+  .contact-page-split__row--2 {
+    display: grid;
+    gap: var(--gap-md);
+    grid-template-columns: 1fr;
+  }
+
+  @media screen and (min-width: 750px) {
+    .contact-page-split__row--2 {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .contact-page-split__label {
+    display: block;
+    margin-bottom: var(--margin-2xs);
+    font-size: 0.85em;
+    letter-spacing: 0.02em;
+    color: rgb(var(--color-foreground-rgb) / var(--opacity-subdued-text, 0.7));
+  }
+
+  .contact-page-split__input {
+    width: 100%;
+    color: var(--contact-input-fg, var(--color-input-text));
+    background-color: var(--contact-input-bg, var(--color-input-background));
+    padding: 0.85rem 1rem;
+    border-radius: var(--style-border-radius-inputs);
+    border-width: max(1px, var(--style-border-width-inputs));
+    border-style: solid;
+    border-color: var(--contact-input-border, rgb(198 165 152 / 0.28));
+    box-shadow: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .contact-page-split__input:hover {
+    border-color: var(--contact-input-border-hover, rgb(198 165 152 / 0.48));
+  }
+
+  .contact-page-split__input:focus {
+    outline: none;
+    border-color: rgb(198 165 152 / 0.85);
+    box-shadow: 0 0 0 3px rgb(198 165 152 / 0.2);
+  }
+
+  .contact-page-split__input::placeholder {
+    color: rgb(var(--color-input-text-rgb, var(--color-foreground-rgb)) / 0.42);
+  }
+
+  .contact-page-split__input--textarea {
+    resize: vertical;
+    min-height: var(--input-textarea-min-height);
+    line-height: 1.45;
+  }
+
+  .contact-page-split__submit {
+    width: 100%;
+    justify-content: center;
+    margin-top: var(--margin-xs);
+    padding-block: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 600;
+    border-radius: 9999px;
+  }
+
+  .contact-page-split__alert {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--gap-xs);
+    padding: var(--padding-md);
+    border-radius: var(--style-border-radius-inputs);
+  }
+
+  .contact-page-split__info-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-xl);
+    margin: 0 0 var(--gap-xl);
+  }
+
+  .contact-page-split__info-row {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: var(--gap-md);
+  }
+
+  .contact-page-split__icon-ring {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    overflow: hidden;
+    background: var(--color-input-background, #ffffff);
+    border: 1px solid rgb(198 165 152 / 0.35);
+  }
+
+  .contact-page-split__icon-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .contact-page-split__info-body {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .contact-page-split__tag {
+    margin: 0 0 0.35rem;
+    font-size: 1em;
+    font-weight: 600;
+    line-height: 1.35;
+    color: rgb(var(--color-foreground-rgb) / 0.92);
+  }
+
+  .contact-page-split__detail {
+    margin: 0;
+    color: rgb(var(--color-foreground-rgb) / 0.72);
+    font-size: 0.95em;
+    line-height: 1.55;
+  }
+
+  .contact-page-split__detail--address {
+    font-style: normal;
+  }
+
+  .contact-page-split__detail :first-child {
+    margin-top: 0;
+  }
+
+  .contact-page-split__detail :last-child {
+    margin-bottom: 0;
+  }
+
+  .contact-page-split__hours {
+    padding: var(--padding-xl);
+    border-radius: var(--style-border-radius-inputs);
+    background: var(--cp-hours-bg, rgb(253 250 247 / 0.95));
+    color: var(--cp-hours-text, rgb(var(--color-foreground-rgb) / 0.92));
+    border: 1px solid rgb(198 165 152 / 0.2);
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.06);
+  }
+
+  .contact-page-split__hours-title {
+    margin: 0 0 var(--margin-md);
+    font-size: 1em;
+    color: inherit;
+  }
+
+  .contact-page-split__hours-list {
+    margin: 0;
+  }
+
+  .contact-page-split__hours-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--gap-md);
+    margin: 0 0 var(--margin-sm);
+    font-size: 0.95em;
+  }
+
+  .contact-page-split__hours-row:last-child {
+    margin-bottom: 0;
+  }
+
+  .contact-page-split__hours-row dt {
+    margin: 0;
+    flex: 1;
+    min-width: 0;
+    text-align: start;
+  }
+
+  .contact-page-split__hours-row dd {
+    margin: 0;
+    flex-shrink: 0;
+    text-align: end;
+    max-width: 55%;
+  }
+
+  @media screen and (max-width: 749px) {
+    .contact-page-split__grid {
+      gap: var(--gap-xl);
+    }
+
+    .contact-page-split__info-row {
+      gap: var(--gap-sm);
+    }
+
+    .contact-page-split__icon-ring {
+      width: 3.25rem;
+      height: 3.25rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Contact page (split)",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Form column"
+    },
+    {
+      "type": "text",
+      "id": "heading_form",
+      "label": "Heading",
+      "default": "Send us a message"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_subject",
+      "label": "Show subject field",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "label_first",
+      "label": "First name label",
+      "default": "First name"
+    },
+    {
+      "type": "text",
+      "id": "label_last",
+      "label": "Last name label",
+      "default": "Last name"
+    },
+    {
+      "type": "text",
+      "id": "label_email",
+      "label": "Email label",
+      "default": "Email"
+    },
+    {
+      "type": "text",
+      "id": "label_phone",
+      "label": "Phone label",
+      "default": "Phone Number (optional)"
+    },
+    {
+      "type": "text",
+      "id": "label_subject",
+      "label": "Subject label",
+      "default": "Subject"
+    },
+    {
+      "type": "text",
+      "id": "label_message",
+      "label": "Message label",
+      "default": "Message"
+    },
+    {
+      "type": "text",
+      "id": "message_placeholder",
+      "label": "Message placeholder",
+      "default": "Tell us how we can help..."
+    },
+    {
+      "type": "text",
+      "id": "submit_label",
+      "label": "Submit button",
+      "default": "Send Message"
+    },
+    {
+      "type": "header",
+      "content": "Form field styling"
+    },
+    {
+      "type": "paragraph",
+      "content": "Optional overrides; otherwise theme input colors are used."
+    },
+    {
+      "type": "color",
+      "id": "input_background_override",
+      "label": "Input background"
+    },
+    {
+      "type": "color",
+      "id": "input_border_override",
+      "label": "Input border"
+    },
+    {
+      "type": "header",
+      "content": "Information column"
+    },
+    {
+      "type": "text",
+      "id": "heading_info",
+      "label": "Heading",
+      "default": "Contact Information"
+    },
+    {
+      "type": "paragraph",
+      "content": "Icons: assets/email.png, phone.png, location.png"
+    },
+    {
+      "type": "text",
+      "id": "label_email_block",
+      "label": "Email tag",
+      "default": "Email"
+    },
+    {
+      "type": "richtext",
+      "id": "email_body",
+      "label": "Email details"
+    },
+    {
+      "type": "text",
+      "id": "label_phone_block",
+      "label": "Phone tag",
+      "default": "Phone"
+    },
+    {
+      "type": "richtext",
+      "id": "phone_body",
+      "label": "Phone details"
+    },
+    {
+      "type": "text",
+      "id": "label_office_block",
+      "label": "Office tag",
+      "default": "Office"
+    },
+    {
+      "type": "richtext",
+      "id": "address_body",
+      "label": "Office address"
+    },
+    {
+      "type": "header",
+      "content": "Customer service hours box"
+    },
+    {
+      "type": "text",
+      "id": "hours_heading",
+      "label": "Box heading",
+      "default": "Customer Service Hours"
+    },
+    {
+      "type": "color",
+      "id": "hours_background",
+      "label": "Box background (optional)"
+    },
+    {
+      "type": "color",
+      "id": "hours_text",
+      "label": "Box text (optional)"
+    },
+    {
+      "type": "text",
+      "id": "hours_row1_label",
+      "label": "Row 1 label",
+      "default": "Monday – Friday"
+    },
+    {
+      "type": "text",
+      "id": "hours_row1_value",
+      "label": "Row 1 hours",
+      "default": "9:00 AM – 6:00 PM EST"
+    },
+    {
+      "type": "text",
+      "id": "hours_row2_label",
+      "label": "Row 2 label",
+      "default": "Saturday"
+    },
+    {
+      "type": "text",
+      "id": "hours_row2_value",
+      "label": "Row 2 hours",
+      "default": "10:00 AM – 4:00 PM EST"
+    },
+    {
+      "type": "text",
+      "id": "hours_row3_label",
+      "label": "Row 3 label",
+      "default": "Sunday"
+    },
+    {
+      "type": "text",
+      "id": "hours_row3_value",
+      "label": "Row 3 hours",
+      "default": "Closed"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "width",
+      "label": "Width (desktop)",
+      "options": [
+        {
+          "value": "fit-content",
+          "label": "Fit"
+        },
+        {
+          "value": "custom",
+          "label": "Custom"
+        }
+      ],
+      "default": "custom"
+    },
+    {
+      "type": "range",
+      "id": "custom_width",
+      "label": "Custom width",
+      "min": 50,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 100,
+      "visible_if": "{{ block.settings.width == 'custom' }}"
+    },
+    {
+      "type": "select",
+      "id": "width_mobile",
+      "label": "Width (mobile)",
+      "options": [
+        {
+          "value": "fit-content",
+          "label": "Fit"
+        },
+        {
+          "value": "custom",
+          "label": "Custom"
+        }
+      ],
+      "default": "custom"
+    },
+    {
+      "type": "range",
+      "id": "custom_width_mobile",
+      "label": "Custom width (mobile)",
+      "min": 50,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 100,
+      "visible_if": "{{ block.settings.width_mobile == 'custom' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "inherit_color_scheme",
+      "label": "Inherit section color scheme",
+      "default": true
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1",
+      "visible_if": "{{ block.settings.inherit_color_scheme == false }}"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start",
+      "label": "Left",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end",
+      "label": "Right",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Contact page (split)",
+      "category": "t:categories.forms"
+    }
+  ]
+}
+{% endschema %}

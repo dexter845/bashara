@@ -1,0 +1,51 @@
+{% assign row_settings = block.settings %}
+
+<accordion-custom
+  {% if row_settings.open_by_default %}
+    open-by-default-on-desktop
+    open-by-default-on-mobile
+  {% endif %}
+>
+  <details
+    class="faq-accordion__details"
+    {% if row_settings.open_by_default %}
+      open
+    {% endif %}
+    {{ block.shopify_attributes }}
+  >
+    <summary class="faq-accordion__summary">
+      <span class="faq-accordion__question">{{ row_settings.question }}</span>
+      <span class="svg-wrapper icon-plus faq-accordion__icon" aria-hidden="true">
+        {{- 'icon-plus.svg' | inline_asset_content -}}
+      </span>
+    </summary>
+    <div class="details-content faq-accordion__answer rte">{{ row_settings.answer }}</div>
+  </details>
+</accordion-custom>
+
+{% schema %}
+{
+  "name": "FAQ item",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "question",
+      "label": "Question",
+      "default": "Question"
+    },
+    {
+      "type": "richtext",
+      "id": "answer",
+      "label": "Answer"
+    },
+    {
+      "type": "checkbox",
+      "id": "open_by_default",
+      "label": "Open by default",
+      "default": false
+    }
+  ],
+  "presets": []
+}
+{% endschema %}

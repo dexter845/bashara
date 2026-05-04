@@ -1,0 +1,410 @@
+{% liquid
+  assign current_product = section.settings.product
+%}
+
+{% if current_product != blank %}
+  <script type="application/ld+json">
+    {{ current_product | structured_data }}
+  </script>
+{% endif %}
+
+{% capture media_gallery %}
+  {% content_for 'block',
+    type: '_featured-product-information-carousel',
+    id: 'media-gallery',
+    closest.product: current_product
+  %}
+{% endcapture %}
+
+{% capture product_details %}
+  {% content_for 'block',
+    type: '_product-details',
+    id: 'product-details',
+    closest.product: current_product
+  %}
+{% endcapture %}
+
+{% capture additional_blocks %}
+  {% content_for 'blocks' %}
+{% endcapture %}
+
+<product-info-section id="{{ section.id }}">
+  {% if current_product == blank %}
+    <div class="section section--page-width color-{{ section.settings.color_scheme }}">
+      <div class="product-info-section__empty rte">
+        <p>Select a product in section settings to render this layout.</p>
+      </div>
+    </div>
+  {% else %}
+    {% render 'product-information-content',
+      product_media_size: current_product.media.size,
+      section_id: section.id,
+      settings: section.settings,
+      media_gallery: media_gallery,
+      product_details: product_details,
+      additional_blocks: additional_blocks
+    %}
+  {% endif %}
+</product-info-section>
+
+{% stylesheet %}
+  .product-info-section__empty {
+    padding: var(--padding-3xl) 0;
+  }
+
+  /* Small scoped refinements while keeping Horizon behavior */
+  .shopify-section:has(product-info-section) .product-information__media {
+    align-self: start;
+  }
+
+  .shopify-section:has(product-info-section) .product-details > .group-block {
+    width: 100%;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Product info section",
+  "blocks": [
+    {
+      "type": "@app"
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "content_width",
+      "label": "Width",
+      "options": [
+        { "value": "content-center-aligned", "label": "Page" },
+        { "value": "content-full-width", "label": "Full" }
+      ],
+      "default": "content-center-aligned"
+    },
+    {
+      "type": "select",
+      "id": "desktop_media_position",
+      "label": "Media position",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "checkbox",
+      "id": "equal_columns",
+      "label": "Equal columns",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "limit_details_width",
+      "label": "Limit product details width",
+      "default": false,
+      "visible_if": "{{ section.settings.equal_columns }}"
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Gap",
+      "min": 0,
+      "max": 48,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 24
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product info section",
+      "category": "Products",
+      "settings": {
+        "content_width": "content-center-aligned",
+        "desktop_media_position": "left",
+        "equal_columns": true,
+        "gap": 24,
+        "color_scheme": "scheme-1",
+        "padding-block-start": 24,
+        "padding-block-end": 24
+      },
+      "blocks": {
+        "media-gallery": {
+          "type": "_featured-product-information-carousel",
+          "static": true,
+          "settings": {
+            "constrain_to_viewport": true,
+            "media_fit": "contain",
+            "media_radius": 16,
+            "extend_media": false,
+            "hide_variants": true,
+            "slideshow_controls_style": "thumbnails",
+            "slideshow_mobile_controls_style": "dots",
+            "thumbnail_position": "bottom",
+            "thumbnail_width": 100,
+            "thumbnail_radius": 12
+          }
+        },
+        "product-details": {
+          "type": "_product-details",
+          "static": true,
+          "settings": {
+            "gap": 14,
+            "sticky_details_desktop": true,
+            "padding-block-start": 12,
+            "padding-block-end": 12,
+            "width": "fill",
+            "width_mobile": "fill"
+          },
+          "blocks": {
+            "label": {
+              "type": "text",
+              "settings": {
+                "text": "<p>Glass Skin</p>",
+                "type_preset": "paragraph",
+                "alignment": "left"
+              }
+            },
+            "title": {
+              "type": "product-title",
+              "settings": {
+                "type_preset": "h2",
+                "alignment": "left"
+              }
+            },
+            "review": {
+            "type": "review",
+            "settings": {
+                "stars_style": "shaded",
+                "show_number": true,
+                "rating_color": "primary",
+                "type_preset": "paragraph",
+                "width": "fit-content"
+            }
+            },
+            "price": {
+              "type": "price",
+              "settings": {
+                "type_preset": "h3",
+                "show_sale_price_first": true,
+                "alignment": "left"
+              }
+            },
+            "description": {
+              "type": "product-description",
+              "settings": {
+                "alignment": "left"
+              }
+            },
+            "benefits_title": {
+              "type": "text",
+              "settings": {
+                "text": "<h4>Key Benefits</h4>",
+                "type_preset": "h5",
+                "alignment": "left"
+              }
+            },
+            "benefits_group": {
+              "type": "group",
+              "settings": {
+                "content_direction": "column",
+                "horizontal_alignment_flex_direction_column": "flex-start",
+                "vertical_alignment_flex_direction_column": "flex-start",
+                "gap": 8,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {
+                "benefit_1": {
+                  "type": "group",
+                  "settings": {
+                    "content_direction": "row",
+                    "horizontal_alignment": "flex-start",
+                    "vertical_alignment": "center",
+                    "gap": 8,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {
+                    "icon_1": { "type": "icon", "settings": { "icon": "checkmark", "width": 14 } },
+                    "text_1": { "type": "text", "settings": { "text": "<p>Intense hydration with 3 types of hyaluronic acid</p>", "alignment": "left" } }
+                  },
+                  "block_order": ["icon_1", "text_1"]
+                },
+                "benefit_2": {
+                  "type": "group",
+                  "settings": {
+                    "content_direction": "row",
+                    "horizontal_alignment": "flex-start",
+                    "vertical_alignment": "center",
+                    "gap": 8
+                  },
+                  "blocks": {
+                    "icon_2": { "type": "icon", "settings": { "icon": "checkmark", "width": 14 } },
+                    "text_2": { "type": "text", "settings": { "text": "<p>Plumps fine lines and wrinkles</p>", "alignment": "left" } }
+                  },
+                  "block_order": ["icon_2", "text_2"]
+                }
+              },
+              "block_order": ["benefit_1", "benefit_2"]
+            },
+            "variant_picker": {
+              "type": "variant-picker",
+              "settings": {
+                "variant_style": "dropdown"
+              }
+            },
+           "buy_buttons": {
+  "type": "buy-buttons",
+  "settings": {},
+  "blocks": {
+    "quantity": { "type": "quantity", "static": true },
+    "add-to-cart": { "type": "add-to-cart", "static": true }
+  },
+  "block_order": []
+},
+            "shipping_row": {
+              "type": "group",
+              "settings": {
+                "content_direction": "row",
+                "horizontal_alignment": "space-between",
+                "vertical_alignment": "center",
+                "vertical_on_mobile": true,
+                "gap": 8
+              },
+              "blocks": {
+                "ship_item": {
+                  "type": "group",
+                  "settings": {
+                    "content_direction": "row",
+                    "gap": 8
+                  },
+                  "blocks": {
+                    "ship_icon": { "type": "icon", "settings": { "icon": "checkmark", "width": 14 } },
+                    "ship_text": { "type": "text", "settings": { "text": "<p>Free shipping over $50</p>", "alignment": "left" } }
+                  },
+                  "block_order": ["ship_icon", "ship_text"]
+                },
+                "return_item": {
+                  "type": "group",
+                  "settings": {
+                    "content_direction": "row",
+                    "gap": 8
+                  },
+                  "blocks": {
+                    "return_icon": { "type": "icon", "settings": { "icon": "checkmark", "width": 14 } },
+                    "return_text": { "type": "text", "settings": { "text": "<p>30-day return policy</p>", "alignment": "left" } }
+                  },
+                  "block_order": ["return_icon", "return_text"]
+                }
+              },
+              "block_order": ["ship_item", "return_item"]
+            },
+            "usage_accordion": {
+              "type": "accordion",
+              "settings": {
+                "icon": "plus",
+                "dividers": true
+              },
+              "blocks": {
+                "how_to_use": {
+                  "type": "_accordion-row",
+                  "settings": {
+                    "heading": "How to Use"
+                  },
+                  "blocks": {
+                    "body": {
+                      "type": "text",
+                      "settings": {
+                        "text": "<p>After cleansing and toning, apply 2–3 drops to face and neck. Follow with moisturizer.</p>",
+                        "alignment": "left"
+                      }
+                    }
+                  },
+                  "block_order": ["body"]
+                },
+                "ingredients": {
+                  "type": "_accordion-row",
+                  "settings": {
+                    "heading": "Ingredients"
+                  },
+                  "blocks": {
+                    "body": {
+                      "type": "text",
+                      "settings": {
+                        "text": "<p>Water, Sodium Hyaluronate, Butylene Glycol, Glycerin, Centella Asiatica Extract, Niacinamide.</p>",
+                        "alignment": "left"
+                      }
+                    }
+                  },
+                  "block_order": ["body"]
+                }
+              },
+              "block_order": ["how_to_use", "ingredients"]
+            }
+          },
+          "block_order": [
+            "label",
+            "title",
+            "review",
+            "price",
+            "description",
+            "benefits_title",
+            "benefits_group",
+            "variant_picker",
+            "buy_buttons",
+            "shipping_row",
+            "usage_accordion"
+          ]
+        }
+      }
+    }
+  ]
+}
+{% endschema %}
