@@ -1,0 +1,203 @@
+{% comment %}
+  Renders a two-pane detailed collection mega menu.
+  Accepts:
+  - current_link_object: The parent navigation link object.
+  - current_section_object: The section object (for settings like color_scheme).
+{% endcomment %}
+
+<div class="detailed-mega-menu page-width" data-parent-link-handle="{{ current_link_object.handle }}">
+  <div class="detailed-mega-menu__left-pane">
+    <ul role="list">
+      {%- for childlink in current_link_object.links -%}
+        <li
+          data-childlink-handle="{{ childlink.handle }}"
+          data-grandchild-target="grandchild-list-{{ current_link_object.handle }}-{{ childlink.handle }}"
+          {% if childlink.links == blank %}data-has-grandchild="false"{% else %}data-has-grandchild="true"{% endif %}
+        >
+          <a
+            href="{{ childlink.url }}"
+            class="detailed-mega-menu__child-link mega-menu__link mega-menu__link--parent {% if childlink.links == blank %}detailed-mega-menu__child-link--no-children{% endif %}"
+          >
+            {{ childlink.title | escape }}
+            {%- if childlink.links != blank -%}
+              {{- 'icon-caret.svg' | inline_asset_content -}}
+            {%- endif -%}
+          </a>
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+  <div class="detailed-mega-menu__right-pane">
+    {%- for childlink in current_link_object.links -%}
+      {%- if childlink.links != blank -%}
+        <div
+          class="detailed-mega-menu__grandchild-list"
+          id="grandchild-list-{{ current_link_object.handle }}-{{ childlink.handle }}"
+          style="display: none;"
+        >
+          <ul role="list">
+            {%- for grandchildlink in childlink.links -%}
+              <li>
+                <a href="{{ grandchildlink.url }}" class="detailed-mega-menu__grandchild-link">
+                  {%- liquid
+                    assign collection_product_image_object = null
+                    assign alt_text = grandchildlink.title | escape
+
+                    if grandchildlink.type == 'collection_link'
+                      assign target_collection = grandchildlink.object
+                      if target_collection.products.first and target_collection.products.first.featured_image
+                        assign collection_product_image_object = target_collection.products.first.featured_image
+                      elsif target_collection.image
+                        assign collection_product_image_object = target_collection.image
+                      endif
+                    elsif grandchildlink.type == 'product_link'
+                      assign target_product = grandchildlink.object
+                      if target_product.featured_image
+                        assign collection_product_image_object = target_product.featured_image
+                      endif
+                    endif
+                  -%}
+                  {%- if collection_product_image_object -%}
+                    <img
+                      src="{{ collection_product_image_object | remove_first: 'files/' | file_url }}"
+                      alt="{{ alt_text }}"
+                      class="detailed-mega-menu__grandchild-image"
+                      width="100"
+                      height="100"
+                      loading="lazy"
+                    >
+                  {%- else -%}
+                    <div class="detailed-mega-menu__grandchild-image-placeholder">
+                      {{- 'icon-image.svg' | inline_asset_content -}}
+                    </div>
+                  {%- endif -%}
+                  <span>{{ grandchildlink.title | escape }}</span>
+                </a>
+              </li>
+            {%- endfor -%}
+          </ul>
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
+      <div class="detailed-mega-menu__right-pane-default-message" style="display: none;">
+      Select an item from the left to see more.
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Use a more specific selector if this script is part of a snippet rendered multiple times
+  // For now, assuming it's unique enough or the logic within handles multiple instances correctly.
+  const setupDetailedMegaMenu = (menuElement) => {
+    console.log('Detailed Mega Menu JS: Initializing a menu element.');
+    const leftPaneListItems = menuElement.querySelectorAll('.detailed-mega-menu__left-pane > ul > li');
+    const rightPane = menuElement.querySelector('.detailed-mega-menu__right-pane');
+    const defaultMessage = rightPane ? rightPane.querySelector('.detailed-mega-menu__right-pane-default-message') : null;
+    let activeGrandchildList = null;
+    let activeChildLink = null;
+
+    if (!rightPane) {
+        console.error('Detailed Mega Menu JS: Menu is missing .detailed-mega-menu__right-pane');
+        return;
+    }
+    if (!defaultMessage) {
+        console.warn('Detailed Mega Menu JS: Menu is missing .detailed-mega-menu__right-pane-default-message');
+    }
+
+    const showDefaultMessage = () => {
+      if (defaultMessage) {
+        defaultMessage.style.display = 'flex';
+      }
+    };
+    const hideDefaultMessage = () => {
+      if (defaultMessage) {
+        defaultMessage.style.display = 'none';
+      }
+    };
+
+    leftPaneListItems.forEach((listItem) => {
+      const link = listItem.querySelector('a');
+      if (!link) return;
+
+      link.addEventListener('mouseenter', () => {
+        const targetId = listItem.dataset.grandchildTarget;
+        const hasGrandchild = listItem.dataset.hasGrandchild === 'true';
+
+        if (activeChildLink && activeChildLink !== link) {
+          activeChildLink.classList.remove('active');
+        }
+        link.classList.add('active');
+        activeChildLink = link;
+
+        if (activeGrandchildList) {
+          activeGrandchildList.style.display = 'none';
+        }
+        activeGrandchildList = null; // Reset active list
+        hideDefaultMessage();
+
+        if (hasGrandchild) {
+          const grandchildList = rightPane.querySelector(`#${targetId}`);
+          if (grandchildList) {
+            grandchildList.style.display = 'block'; // Or 'grid'/'flex' depending on your CSS for the list
+            activeGrandchildList = grandchildList;
+          } else {
+            showDefaultMessage();
+          }
+        } else {
+          showDefaultMessage();
+        }
+      });
+    });
+
+    let initialTargetLink = null;
+    if (leftPaneListItems.length > 0) {
+        const firstWithGrandchildren = Array.from(leftPaneListItems).find(li => li.dataset.hasGrandchild === 'true');
+        initialTargetLink = firstWithGrandchildren ? firstWithGrandchildren.querySelector('a') : leftPaneListItems[0].querySelector('a');
+    }
+
+    if (initialTargetLink) {
+        initialTargetLink.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true, cancelable: true }));
+    } else if (leftPaneListItems.length === 0) { // No items in left pane at all
+        showDefaultMessage();
+    }
+
+
+    // Mouseleave logic for the entire detailed-mega-menu container
+    menuElement.addEventListener('mouseleave', (event) => {
+      // Check if the mouse is truly leaving the menuElement and not moving to a child
+      if (!menuElement.contains(event.relatedTarget)) {
+        if (activeGrandchildList) {
+          activeGrandchildList.style.display = 'none';
+        }
+        if (activeChildLink) {
+          activeChildLink.classList.remove('active');
+        }
+        activeGrandchildList = null;
+        activeChildLink = null;
+        // Decide if default message should show on mouseleave.
+        // For now, let's assume we want to reset to the initial state, which might mean showing default if nothing auto-activates.
+        // Or, if you want it to just hide everything and not show default:
+        // hideDefaultMessage();
+        // For consistency with initial load, let's re-trigger initial activation or show default.
+        if (initialTargetLink) {
+            initialTargetLink.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true, cancelable: true }));
+        } else if (leftPaneListItems.length === 0) {
+            showDefaultMessage();
+        } else {
+            // If there are items, but none were specifically set as initial, and the first one doesn't have children
+            const firstItemLink = leftPaneListItems[0] ? leftPaneListItems[0].querySelector('a') : null;
+            if (firstItemLink && leftPaneListItems[0].dataset.hasGrandchild === 'false') {
+                 firstItemLink.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true, cancelable: true })); // This will show default message
+            } else if (!firstItemLink) { // No items
+                showDefaultMessage();
+            }
+        }
+      }
+    });
+  };
+
+  // Initialize all detailed mega menus on the page
+  document.querySelectorAll('.detailed-mega-menu').forEach(setupDetailedMegaMenu);
+});
+</script> 
