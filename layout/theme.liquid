@@ -31,7 +31,6 @@
     {%- render 'theme-styles-variables' -%}
     {%- render 'color-schemes' -%}
     {{ 'swiper-bundle.min.css' | asset_url | stylesheet_tag }}
-    {{ 'swiper-bundle.min.js' | asset_url | script_tag }}
     {% if request.design_mode %}
       {%- render 'theme-editor' -%}
     {% endif %}
@@ -133,5 +132,7 @@
     {% if settings.quick_add or settings.mobile_quick_add %}
       {% render 'quick-add-modal' %}
     {% endif %}
+    
+    <script src="{{ 'swiper-bundle.min.js' | asset_url }}"></script>
   </body>
 </html>

@@ -3,15 +3,33 @@
   Accepts:
   - current_link_object: The parent navigation link object.
   - layout_columns: The number of columns for the layout.
-  - featured_block: The product block to feature, if any.
+  - featured_block: The product block to feature, if any (also used for items-per-column setting).
 {% endcomment %}
 
+{%- if featured_block -%}
+  {%- assign items_per_col = featured_block.settings.mega_menu_items_per_column | default: 6 -%}
+  {%- assign threshold_2 = items_per_col -%}
+  {%- assign threshold_3 = items_per_col | times: 2 -%}
+{%- endif -%}
+
 <ul
-  class="mega-menu__list page-width{% if current_link_object.levels == 1 %} mega-menu__list--condensed{% endif %} columns-{{ layout_columns }}"
+  class="mega-menu__list mega-menu__list--product page-width{% if current_link_object.levels == 1 %} mega-menu__list--condensed{% endif %} columns-{{ layout_columns }}"
   role="list"
 >
   {%- for childlink in current_link_object.links -%}
-    <li>
+    {%- if featured_block and childlink.links != blank -%}
+      {%- assign sublist_size = childlink.links.size -%}
+      {%- if sublist_size >= threshold_3 -%}
+        {%- assign li_span_class = 'mega-menu__col--span-3' -%}
+      {%- elsif sublist_size >= threshold_2 -%}
+        {%- assign li_span_class = 'mega-menu__col--span-2' -%}
+      {%- else -%}
+        {%- assign li_span_class = '' -%}
+      {%- endif -%}
+    {%- else -%}
+      {%- assign li_span_class = '' -%}
+    {%- endif -%}
+    <li class="{{ li_span_class }}">
       <a
         id="HeaderMenu-{{ current_link_object.handle }}-{{ childlink.handle }}"
         href="{{ childlink.url }}"
@@ -23,7 +41,18 @@
         {{ childlink.title | escape }}
       </a>
       {%- if childlink.links != blank -%}
-        <ul class="list-unstyled" role="list">
+        {%- if featured_block -%}
+          {%- if sublist_size >= threshold_3 -%}
+            {%- assign sublist_col_class = 'mega-menu__sublist--cols-3' -%}
+          {%- elsif sublist_size >= threshold_2 -%}
+            {%- assign sublist_col_class = 'mega-menu__sublist--cols-2' -%}
+          {%- else -%}
+            {%- assign sublist_col_class = '' -%}
+          {%- endif -%}
+        {%- else -%}
+          {%- assign sublist_col_class = '' -%}
+        {%- endif -%}
+        <ul class="mega-menu__sublist list-unstyled {{ sublist_col_class }}" role="list">
           {%- for grandchildlink in childlink.links -%}
             <li>
               <a

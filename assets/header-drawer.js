@@ -1,18 +1,17 @@
 import { Component } from '@theme/component';
 import { trapFocus, removeTrapFocus } from '@theme/focus';
-import { onAnimationEnd, removeWillChangeOnAnimationEnd } from '@theme/utilities';
+import { onAnimationEnd } from '@theme/utilities';
 
 /**
  * A custom element that manages the main menu drawer.
  *
  * @typedef {object} Refs
  * @property {HTMLDetailsElement} details - The details element.
- * @property {HTMLDivElement} menuDrawer - The slideable drawer panel containing the menu.
  *
  * @extends {Component<Refs>}
  */
 class HeaderDrawer extends Component {
-  requiredRefs = ['details', 'menuDrawer'];
+  requiredRefs = ['details'];
 
   connectedCallback() {
     super.connectedCallback();
@@ -63,10 +62,9 @@ class HeaderDrawer extends Component {
 
   /**
    * Open the closest drawer or the main menu drawer
-   * @param {string} [target]
    * @param {Event} [event]
    */
-  open(target, event) {
+  open(event) {
     const details = this.#getDetailsElement(event);
     const summary = details.querySelector('summary');
 
@@ -77,14 +75,9 @@ class HeaderDrawer extends Component {
     this.preventInitialAccordionAnimations(details);
     requestAnimationFrame(() => {
       details.classList.add('menu-open');
-
-      if (target) {
-        this.refs.menuDrawer.classList.add('menu-drawer--has-submenu-opened');
-      }
-
-      // Wait for the drawer animation to complete before trapping focus
-      const drawer = details.querySelector('.menu-drawer, .menu-drawer__submenu');
-      onAnimationEnd(drawer || details, () => trapFocus(details), { subtree: false });
+      setTimeout(() => {
+        trapFocus(details);
+      }, 0);
     });
   }
 
@@ -115,26 +108,19 @@ class HeaderDrawer extends Component {
 
     summary.setAttribute('aria-expanded', 'false');
     details.classList.remove('menu-open');
-    this.refs.menuDrawer.classList.remove('menu-drawer--has-submenu-opened');
 
-    // Wait for the .menu-drawer element's transition, not the entire details subtree
-    // This avoids waiting for child accordion/resource-card animations which can cause issues on Firefox
-    const drawer = details.querySelector('.menu-drawer, .menu-drawer__submenu');
-
-    onAnimationEnd(
-      drawer || details,
-      () => {
-        reset(details);
-        if (details === this.refs.details) {
-          removeTrapFocus();
-          const openDetails = this.querySelectorAll('details[open]:not(accordion-custom > details)');
-          openDetails.forEach(reset);
-        } else {
+    onAnimationEnd(details, () => {
+      reset(details);
+      if (details === this.refs.details) {
+        removeTrapFocus();
+        const openDetails = this.querySelectorAll('details[open]:not(accordion-custom > details)');
+        openDetails.forEach(reset);
+      } else {
+        setTimeout(() => {
           trapFocus(this.refs.details);
-        }
-      },
-      { subtree: false }
-    );
+        }, 0);
+      }
+    });
   }
 
   /**
@@ -142,6 +128,16 @@ class HeaderDrawer extends Component {
    * to remove the stacking context and allow submenus to be positioned correctly
    */
   #setupAnimatedElementListeners() {
+    /**
+     * @param {AnimationEvent} event
+     */
+    function removeWillChangeOnAnimationEnd(event) {
+      const target = event.target;
+      if (target && target instanceof HTMLElement) {
+        target.style.setProperty('will-change', 'unset');
+        target.removeEventListener('animationend', removeWillChangeOnAnimationEnd);
+      }
+    }
     const allAnimated = this.querySelectorAll('.menu-drawer__animated-element');
     allAnimated.forEach((element) => {
       element.addEventListener('animationend', removeWillChangeOnAnimationEnd);
