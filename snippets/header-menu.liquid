@@ -51,6 +51,7 @@
             class="menu-list__submenu-inner"
             style="{% render 'submenu-font-styles', settings: settings %}"
           >
+          <div class="menu-list__submenu-content">
           {% if section.settings.menu_style == 'custom_content' %}
             {%- liquid
                 assign has_detailed_collection_block_for_link = false
@@ -102,6 +103,27 @@
               image_border_radius: image_border_radius
             %}
           {%endif%}
+          </div>
+          {% if settings.mega_menu_promo_enable and settings.mega_menu_promo_text != blank %}
+            <div
+              class="menu-list__submenu-promo"
+              style="--mega-menu-promo-bg: {{ settings.mega_menu_promo_bg | default: '#2563eb' }}; --mega-menu-promo-color: {{ settings.mega_menu_promo_text_color | default: '#ffffff' }};"
+            >
+              {% if settings.mega_menu_promo_link != blank %}
+                <a href="{{ settings.mega_menu_promo_link }}" class="menu-list__submenu-promo__link">
+                  <span class="menu-list__submenu-promo__text">{{ settings.mega_menu_promo_text }}</span>
+                  {% if settings.mega_menu_promo_button_text != blank %}
+                    <span class="menu-list__submenu-promo__cta">{{ settings.mega_menu_promo_button_text }}</span>
+                  {% endif %}
+                </a>
+              {% else %}
+                <span class="menu-list__submenu-promo__text">{{ settings.mega_menu_promo_text }}</span>
+                {% if settings.mega_menu_promo_button_text != blank %}
+                  <span class="menu-list__submenu-promo__cta">{{ settings.mega_menu_promo_button_text }}</span>
+                {% endif %}
+              {% endif %}
+            </div>
+          {% endif %}
           </div>
         </div>
       {%- endif -%}

@@ -1,5 +1,4 @@
 
-
 {% liquid
   assign order = 'logo,menu,localization,search,mobile_search,actions'
 
@@ -919,6 +918,46 @@
     },
     {
       "type": "header",
+      "content": "Mega menu"
+    },
+    {
+      "type": "checkbox",
+      "id": "mega_menu_promo_enable",
+      "label": "Show promo bar at bottom of mega menu",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "mega_menu_promo_text",
+      "label": "Promo bar text",
+      "default": "LIMITED TIME! Up to 30% OFF Select Bags",
+      "info": "Shown at the bottom of every mega menu panel when enabled."
+    },
+    {
+      "type": "url",
+      "id": "mega_menu_promo_link",
+      "label": "Promo bar link"
+    },
+    {
+      "type": "text",
+      "id": "mega_menu_promo_button_text",
+      "label": "Promo bar button text",
+      "default": "SHOP NOW"
+    },
+    {
+      "type": "color",
+      "id": "mega_menu_promo_bg",
+      "label": "Promo bar background",
+      "default": "#2563eb"
+    },
+    {
+      "type": "color",
+      "id": "mega_menu_promo_text_color",
+      "label": "Promo bar text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
       "content": "t:content.typography_primary"
     },
     {
@@ -1658,6 +1697,16 @@
           "default": 6,
           "label": "Columns",
           "info": "Number of columns you want to use in mega menu"
+        },
+        {
+          "type": "range",
+          "id": "mega_menu_items_per_column",
+          "label": "Items per column before adding columns",
+          "min": 1,
+          "max": 20,
+          "step": 1,
+          "default": 6,
+          "info": "Above this many links, a column spans 2 grid columns; above double that, it spans 3."
         }
       ]
     },

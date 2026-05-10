@@ -67,29 +67,19 @@
       </span>
     </summary>
     <div
-      ref="menuDrawer"
+      data-header-drawer
       class="
         menu-drawer
+        motion-reduce
         color-{{ block_settings.color_scheme }}
       "
     >
-      <button
-        class="button close-button menu-drawer__close-button"
-        type="button"
-        aria-label="{{ 'actions.close' | t }}"
-        on:click="/close"
-      >
-        <span class="svg-wrapper header-drawer-icon header-drawer-icon--close">
-          {{- 'icon-close.svg' | inline_asset_content -}}
-        </span>
-      </button>
       <nav
         class="menu-drawer__navigation"
         style="
           {%- render 'menu-font-styles', settings: block_settings, menu_type: 'drawer' %}
           {%- render 'submenu-font-styles', settings: block_settings %}
         "
-        aria-label="{{ 'accessibility.header_navigation_label' | t }}"
       >
         <ul
           class="menu-drawer__menu has-submenu"
@@ -181,7 +171,7 @@
                   <a
                     id="HeaderDrawer-{{ link.handle }}"
                     href="{{ link.url }}"
-                    class="menu-drawer__menu-item menu-drawer__menu-item--mainlist menu-drawer__animated-element focus-inset"
+                    class="menu-drawer__menu-item menu-drawer__menu-item--mainlist menu-drawer__animated-element focus-inset{% if link.current %} menu-drawer__menu-item--active{% endif %}"
                     {% if link.current %}
                       aria-current="page"
                     {% endif %}
@@ -212,9 +202,6 @@
                         <a
                           href="{{ childlink.url }}"
                           class="menu-drawer__menu-item menu-drawer__menu-item--child menu-drawer__animated-element focus-inset{% if childlink.current %} menu-drawer__menu-item--active{% endif %}"
-                          {% if childlink.current %}
-                            aria-current="page"
-                          {% endif %}
                         >
                           {% if render_link_image %}
                             {% render 'link-featured-image',
@@ -235,7 +222,7 @@
                   <a
                     id="HeaderDrawer-{{ link.handle }}"
                     href="{{ link.url }}"
-                    class="menu-drawer__menu-item menu-drawer__menu-item--mainlist menu-drawer__animated-element focus-inset"
+                    class="menu-drawer__menu-item menu-drawer__menu-item--mainlist menu-drawer__animated-element focus-inset{% if link.current %} menu-drawer__menu-item--active{% endif %}"
                     {% if link.current %}
                       aria-current="page"
                     {% endif %}
@@ -267,7 +254,7 @@
                     <summary
                       id="HeaderDrawer-{{ link.handle }}"
                       class="menu-drawer__menu-item menu-drawer__menu-item--mainlist menu-drawer__animated-element focus-inset{% if link.child_active %} menu-drawer__menu-item--active{% endif %}"
-                      on:click="header-drawer/open/submenu"
+                      on:click="header-drawer/open"
                     >
                       <span class="menu-drawer__menu-item-text wrap-text">{{ link.title | escape }}</span>
                       <span class="svg-wrapper icon-caret icon-caret--forward">
@@ -276,7 +263,7 @@
                     </summary>
                     <div
                       id="link-{{ link.handle | escape }}"
-                      class="menu-drawer__submenu has-submenu"
+                      class="menu-drawer__submenu has-submenu gradient motion-reduce"
                       tabindex="-1"
                       style="--menu-drawer-animation-index: {{ animation_index }};"
                     >
@@ -294,7 +281,7 @@
                             <span class="menu-drawer__menu-item-text wrap-text">{{ link.title | escape }}</span>
                           </button>
                           <button
-                            class="button button-unstyled close-button menu-drawer__close-button"
+                            class="button close-button menu-drawer__close-button"
                             type="button"
                             aria-label="{{ 'actions.close' | t }}"
                             on:click="header-drawer/close"
@@ -326,7 +313,7 @@
                               class="
                                 menu-drawer__list-item
                                 {% if childlink.links != blank -%}
-                                  {% if block_settings.drawer_accordion -%} menu-drawer__list-item--deep{% else -%} menu-drawer__list-item--flat{%- endif -%}
+                                  menu-drawer__list-item--deep
                                 {%- endif -%}
                                 {% if block_settings.drawer_dividers %} menu-drawer__list-item--divider{% endif %}
                               "
@@ -356,142 +343,95 @@
                                   </span>
                                 </a>
                               {%- else -%}
+                                {%- comment -%}
+                                  Always use accordion for child links with grandchildren, in menus with 3 levels of links
+                                  This ensures grandchildren are hidden until the child is clicked
+                                {%- endcomment -%}
                                 {% liquid
                                   assign accordion_state = ''
-                                  if first_accordion_open == false and block_settings.drawer_accordion and block_settings.drawer_accordion_expand_first
+                                  if first_accordion_open == false and block_settings.drawer_accordion_expand_first
                                     assign first_accordion_open = true
                                     assign accordion_state = 'open-by-default-on-mobile'
                                   endif
                                 %}
-                                {% if block_settings.drawer_accordion %}
-                                  {%- comment -%}
-                                    Accordion for links with children, in menus with 3 levels of links
-                                  {%- endcomment -%}
-                                  <accordion-custom {{ accordion_state }}>
-                                    <details
-                                      id="Details-menu-drawer-{{ link.handle }}-{{ childlink.handle }}"
+                                <accordion-custom {{ accordion_state }}>
+                                  <details
+                                    id="Details-menu-drawer-{{ link.handle }}-{{ childlink.handle }}"
+                                  >
+                                    <summary
+                                      id="HeaderDrawer-{{ link.handle }}-{{ childlink.handle }}"
+                                      class="menu-drawer__menu-item menu-drawer__menu-item--parent focus-inset"
                                     >
-                                      <summary
-                                        id="HeaderDrawer-{{ link.handle }}-{{ childlink.handle }}"
-                                        class="menu-drawer__menu-item menu-drawer__menu-item--parent focus-inset"
-                                      >
-                                        <span class="menu-drawer__menu-item-text wrap-text">
-                                          {{- childlink.title | escape -}}
-                                        </span>
-                                        <span class="svg-wrapper icon-plus">
-                                          {{- 'icon-plus.svg' | inline_asset_content -}}
-                                        </span>
-                                      </summary>
-                                      {% liquid
-                                        assign render_link_image = false
-                                        if block_settings.menu_style == 'collection_images'
-                                          assign catalog_links = childlink.links | where: 'type', 'catalog_link'
-                                          assign collection_list_links = childlink.links | where: 'type', 'collections_link'
-                                          assign collection_links = childlink.links | where: 'type', 'collection_link'
-                                          if catalog_links.size > 0 or collection_list_links.size > 0 or collection_links.size > 0
-                                            assign render_link_image = true
-                                          endif
+                                      <span class="menu-drawer__menu-item-text wrap-text">
+                                        {{- childlink.title | escape -}}
+                                      </span>
+                                      <span class="svg-wrapper icon-caret icon-caret--forward">
+                                        {{- 'icon-caret.svg' | inline_asset_content -}}
+                                      </span>
+                                    </summary>
+                                    {% liquid
+                                      assign render_link_image = false
+                                      if block_settings.menu_style == 'collection_images'
+                                        assign catalog_links = childlink.links | where: 'type', 'catalog_link'
+                                        assign collection_list_links = childlink.links | where: 'type', 'collections_link'
+                                        assign collection_links = childlink.links | where: 'type', 'collection_link'
+                                        if catalog_links.size > 0 or collection_list_links.size > 0 or collection_links.size > 0
+                                          assign render_link_image = true
                                         endif
-                                      %}
-                                      <ul
-                                        class="menu-drawer__menu menu-drawer__menu--grandchildlist details-content{% if render_link_image %} menu-drawer__menu--grid{% endif %}"
-                                        role="list"
-                                        tabindex="-1"
-                                      >
-                                        {%- for grandchildlink in childlink.links -%}
-                                          <li
-                                            class="menu-drawer__list-item"
-                                            style="--menu-drawer-animation-index: {{ forloop.index }};"
-                                          >
-                                            <a
-                                              id="HeaderDrawer-{{ link.handle }}-{{ childlink.handle }}-{{ grandchildlink.handle }}"
-                                              href="{{ grandchildlink.url }}"
-                                              class="menu-drawer__menu-item menu-drawer__menu-item--child focus-inset{% if grandchildlink.current %} menu-drawer__menu-item--active{% endif %}"
-                                              {% if grandchildlink.current %}
-                                                aria-current="page"
-                                              {% endif %}
-                                            >
-                                              {% if render_link_image %}
-                                                {% render 'link-featured-image',
-                                                  link: grandchildlink,
-                                                  class: 'menu-drawer__link-image',
-                                                  sizes: 'auto, 400px'
-                                                %}
-                                              {% endif %}
-                                              <span class="menu-drawer__menu-item-text wrap-text">
-                                                {{- grandchildlink.title | escape -}}
-                                              </span>
-                                            </a>
-                                          </li>
-                                        {%- endfor -%}
-                                      </ul>
-                                    </details>
-                                  </accordion-custom>
-                                {% else %}
-                                  {%- comment -%}
-                                    Flat menus for links with children, in menus with 3 levels of links
-                                  {%- endcomment -%}
-                                  <a
-                                    id="HeaderDrawer-{{ link.handle }}-{{ childlink.handle }}"
-                                    href="{{ childlink.url }}"
-                                    class="menu-drawer__menu-item menu-drawer__menu-item--parent focus-inset{% if childlink.current %} menu-drawer__menu-item--active{% endif %}"
-                                    {% if childlink.current %}
-                                      aria-current="page"
-                                    {% endif %}
-                                  >
-                                    <span class="menu-drawer__menu-item-text wrap-text">
-                                      {{- childlink.title | escape -}}
-                                    </span>
-                                  </a>
-                                  {% liquid
-                                    assign render_link_image = false
-                                    if block_settings.menu_style == 'collection_images'
-                                      assign catalog_links = childlink.links | where: 'type', 'catalog_link'
-                                      assign collection_list_links = childlink.links | where: 'type', 'collections_link'
-                                      assign collection_links = childlink.links | where: 'type', 'collection_link'
-                                      if catalog_links.size > 0 or collection_list_links.size > 0 or collection_links.size > 0
-                                        assign render_link_image = true
                                       endif
-                                    endif
-                                  %}
-                                  <ul
-                                    class="menu-drawer__menu menu-drawer__menu--grandchildlist details-content{% if render_link_image %} menu-drawer__menu--grid{% endif %}"
-                                    role="list"
-                                    tabindex="-1"
-                                  >
-                                    {%- for grandchildlink in childlink.links -%}
-                                      <li
-                                        class="menu-drawer__list-item"
-                                        style="--menu-drawer-animation-index: {{ forloop.index }};"
-                                      >
-                                        <a
-                                          id="HeaderDrawer-{{ link.handle }}-{{ childlink.handle }}-{{ grandchildlink.handle }}"
-                                          href="{{ grandchildlink.url }}"
-                                          class="menu-drawer__menu-item menu-drawer__menu-item--child focus-inset{% if grandchildlink.current %} menu-drawer__menu-item--active{% endif %}"
-                                          {% if grandchildlink.current %}
-                                            aria-current="page"
-                                          {% endif %}
+                                    %}
+                                    <ul
+                                      class="menu-drawer__menu menu-drawer__menu--grandchildlist details-content{% if render_link_image %} menu-drawer__menu--grid{% endif %}"
+                                      role="list"
+                                      tabindex="-1"
+                                    >
+                                      {%- for grandchildlink in childlink.links -%}
+                                        <li
+                                          class="menu-drawer__list-item"
+                                          style="--menu-drawer-animation-index: {{ forloop.index }};"
                                         >
-                                          {% if render_link_image %}
-                                            {% render 'link-featured-image',
-                                              link: grandchildlink,
-                                              class: 'menu-drawer__link-image',
-                                              sizes: 'auto, 400px'
-                                            %}
-                                          {% endif %}
-                                          <span class="menu-drawer__menu-item-text wrap-text">
-                                            {{- grandchildlink.title | escape -}}
-                                          </span>
-                                        </a>
-                                      </li>
-                                    {%- endfor -%}
-                                  </ul>
-                                {%- endif -%}
+                                          <a
+                                            id="HeaderDrawer-{{ link.handle }}-{{ childlink.handle }}-{{ grandchildlink.handle }}"
+                                            href="{{ grandchildlink.url }}"
+                                            class="menu-drawer__menu-item menu-drawer__menu-item--child focus-inset{% if grandchildlink.current %} menu-drawer__menu-item--active{% endif %}"
+                                            {% if grandchildlink.current %}
+                                              aria-current="page"
+                                            {% endif %}
+                                          >
+                                            {% if render_link_image %}
+                                              {% render 'link-featured-image',
+                                                link: grandchildlink,
+                                                class: 'menu-drawer__link-image',
+                                                sizes: 'auto, 400px'
+                                              %}
+                                            {% endif %}
+                                            <span class="menu-drawer__menu-item-text wrap-text">
+                                              {{- grandchildlink.title | escape -}}
+                                            </span>
+                                          </a>
+                                        </li>
+                                      {%- endfor -%}
+                                    </ul>
+                                  </details>
+                                </accordion-custom>
                               {%- endif -%}
                             </li>
                           {%- endfor -%}
                         </ul>
                         {% liquid
+                          assign product_block_for_link = null
+                          assign current_link_handle_for_product_block = link.title | handleize
+                          
+                          for block_check in section.blocks
+                            if block_check.type == 'product'
+                              assign parent_link_handle_check = block_check.settings.title | handleize
+                              if current_link_handle_for_product_block == parent_link_handle_check
+                                assign product_block_for_link = block_check
+                                break
+                              endif
+                            endif
+                          endfor
+                          
                           if eager_loading
                             if block_settings.menu_style == 'featured_collections'
                               assign featured_collections = link.links | where: 'type', 'collection_link'
@@ -506,6 +446,83 @@
                             assign featured_products_collection = null | sort
                           endif
                         -%}
+
+                        {%- comment -%} Render mega menu block featured items {%- endcomment -%}
+                        {%- if product_block_for_link -%}
+                          {%- liquid
+                            assign display_type = product_block_for_link.settings.content_display_type | default: 'items'
+                          -%}
+                          {%- if display_type == 'collection' -%}
+                            {%- liquid
+                              assign promo_collection = product_block_for_link.settings.promo_collection
+                              assign product_limit = product_block_for_link.settings.promo_collection_product_limit | default: 4
+                            -%}
+                            {%- if promo_collection != blank and promo_collection.products.size > 0 -%}
+                              <div class="menu-drawer__mega-menu-featured menu-drawer__mega-menu-featured--collection">
+                                <ul class="menu-drawer__mega-menu-featured-grid list-unstyled">
+                                  {%- for product in promo_collection.products limit: product_limit -%}
+                                    <li class="menu-drawer__mega-menu-featured-item">
+                                      <a href="{{ product.url }}" class="menu-drawer__mega-menu-featured-link">
+                                        {%- if product.featured_image -%}
+                                          <div class="menu-drawer__mega-menu-featured-image">
+                                            {{ product.featured_image | image_url: width: 400 | image_tag: loading: 'lazy', sizes: '50vw', widths: '200,300,400' }}
+                                          </div>
+                                        {%- else -%}
+                                          <div class="menu-drawer__mega-menu-featured-image menu-drawer__mega-menu-featured-image--placeholder">
+                                            {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                                          </div>
+                                        {%- endif -%}
+                                        <div class="menu-drawer__mega-menu-featured-title">{{ product.title }}</div>
+                                      </a>
+                                    </li>
+                                  {%- endfor -%}
+                                </ul>
+                              </div>
+                            {%- endif -%}
+                          {%- else -%}
+                            {%- comment -%} Individual Featured Items {%- endcomment -%}
+                            {%- assign has_featured_items = false -%}
+                            {%- for i in (1..3) -%}
+                              {%- capture featured_image_key -%}featured_image_{{ i }}{%- endcapture -%}
+                              {%- capture featured_title_key -%}featured_title_{{ i }}{%- endcapture -%}
+                              {%- if product_block_for_link.settings[featured_image_key] != blank or product_block_for_link.settings[featured_title_key] != blank -%}
+                                {%- assign has_featured_items = true -%}
+                                {%- break -%}
+                              {%- endif -%}
+                            {%- endfor -%}
+                            {%- if has_featured_items -%}
+                              <div class="menu-drawer__mega-menu-featured menu-drawer__mega-menu-featured--items">
+                                <ul class="menu-drawer__mega-menu-featured-grid list-unstyled">
+                                  {%- for i in (1..3) -%}
+                                    {%- capture featured_link_key -%}featured_link_{{ i }}{%- endcapture -%}
+                                    {%- capture featured_image_key -%}featured_image_{{ i }}{%- endcapture -%}
+                                    {%- capture featured_title_key -%}featured_title_{{ i }}{%- endcapture -%}
+                                    {%- assign featured_image = product_block_for_link.settings[featured_image_key] -%}
+                                    {%- assign featured_title = product_block_for_link.settings[featured_title_key] -%}
+                                    {%- if featured_image != blank or featured_title != blank -%}
+                                      <li class="menu-drawer__mega-menu-featured-item">
+                                        <a href="{{ product_block_for_link.settings[featured_link_key] }}" class="menu-drawer__mega-menu-featured-link">
+                                          {%- if featured_image != blank -%}
+                                            <div class="menu-drawer__mega-menu-featured-image">
+                                              {{ featured_image | image_url: width: 400 | image_tag: loading: 'lazy', sizes: '50vw', widths: '200,300,400' }}
+                                            </div>
+                                          {%- else -%}
+                                            <div class="menu-drawer__mega-menu-featured-image menu-drawer__mega-menu-featured-image--placeholder">
+                                              {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                                            </div>
+                                          {%- endif -%}
+                                          {%- if featured_title != blank -%}
+                                            <div class="menu-drawer__mega-menu-featured-title">{{ featured_title }}</div>
+                                          {%- endif -%}
+                                        </a>
+                                      </li>
+                                    {%- endif -%}
+                                  {%- endfor -%}
+                                </ul>
+                              </div>
+                            {%- endif -%}
+                          {%- endif -%}
+                        {%- endif -%}
 
                         {% if featured_collections.size > 0 or featured_products_collection.products_count > 0 %}
                           <div
@@ -552,7 +569,7 @@
                   <a
                     id="HeaderDrawer-{{ link.handle }}"
                     href="{{ link.url }}"
-                    class="menu-drawer__menu-item menu-drawer__menu-item--mainlist menu-drawer__animated-element focus-inset"
+                    class="menu-drawer__menu-item menu-drawer__menu-item--mainlist menu-drawer__animated-element focus-inset{% if link.current %} menu-drawer__menu-item--active{% endif %}"
                     {% if link.current %}
                       aria-current="page"
                     {% endif %}
@@ -581,121 +598,35 @@
           endif
         %}
         {% if data_header_drawer_type == 'mobile-drawer' and show_country or show_language %}
-          {% liquid
-            assign background_brightness = block.settings.color_scheme.settings.background | color_brightness
-            if background_brightness < 64
-              assign flag_shadow_size = 4
-            else
-              assign flag_shadow_size = 2
-            endif
-
-            assign localization_font = '--menu-localization-font: var(--font-[localization_font]--family); ' | replace: '[localization_font]', section.settings.localization_font
-            assign color_shadow = '--color-shadow: rgb(var(--color-foreground-rgb) / var(--opacity-10-25));'
-            assign form_style = localization_font | append: color_shadow
+          {% render 'drawer-localization',
+            show_country: show_country,
+            show_language: show_language,
+            country_style: section.settings.country_selector_style
           %}
-          {% if show_language and show_country == false %}
-            <div class="menu-drawer__localization color-{{ settings.popover_color_scheme }}">
-              {% render 'localization-form',
-                show_country: show_country,
-                show_language: show_language,
-                localization_style: 'drawer',
-                form_style: form_style,
-                form_id: block.id
-              %}
-            </div>
-          {% else %}
-            <drawer-localization-component class="menu-drawer__localization">
-              <details
-                id="drawer-localization"
-                class="drawer-localization"
-                on:toggle="/toggle"
-              >
-                <summary
-                  id="HeaderDrawer-localization"
-                  class="drawer-localization__button h3 link focus-inset"
-                  aria-expanded="false"
-                  on:click="header-drawer/open/submenu"
-                  style="{{ form_style }}"
-                >
-                  <div class="drawer-localization__button--label h6">
-                    {%- if show_country -%}
-                      <div class="mobile-localization mobile-localization--country link">
-                        {%- if section.settings.country_selector_style == true -%}
-                          <span
-                            class="icon-flag"
-                            style="
-                              background-image: url({{- localization.country | image_url: width: 32 }});
-                              --size-shadow: {{ flag_shadow_size }}px;
-                              --color-shadow: rgb(var(--color-foreground-rgb) / var(--opacity-30-60));
-                            "
-                          ></span>
-                        {%- endif -%}
-                        <span class="currency-code">
-                          {{- localization.country.currency.iso_code -}}
-                        </span>
-                      </div>
-                    {%- endif -%}
-
-                    {%- if show_country and show_language -%}
-                      <span>/</span>
-                    {%- endif -%}
-
-                    {%- if show_language -%}
-                      <div class="mobile-localization mobile-localization--country link">
-                        <span>
-                          {{ localization.language.iso_code | upcase }}
-                        </span>
-                      </div>
-                    {%- endif -%}
-                  </div>
-                  <span class="svg-wrapper icon-caret icon-caret--forward">
-                    {{- 'icon-caret.svg' | inline_asset_content -}}
-                  </span>
-                </summary>
-
-                <div
-                  class="menu-drawer__submenu has-submenu color-{{ settings.drawer_color_scheme }}"
-                  style=""
-                >
-                  <div
-                    class="menu-drawer__nav-buttons"
-                    ref="navButtons"
-                  >
-                    <button
-                      class="button menu-drawer__back-button link focus-inset"
-                      aria-expanded="true"
-                      on:click="header-drawer/back"
-                    >
-                      <span class="svg-wrapper icon-caret icon-caret--backward">
-                        {{- 'icon-caret.svg' | inline_asset_content -}}
-                      </span>
-                      {{ 'content.localization_region_and_language' | t }}
-                    </button>
-                    <button
-                      class="button close-button menu-drawer__close-button"
-                      type="button"
-                      aria-label="{{ 'actions.close' | t }}"
-                      on:click="header-drawer/close"
-                    >
-                      <span class="svg-wrapper header-drawer-icon header-drawer-icon--close">
-                        {{- 'icon-close.svg' | inline_asset_content -}}
-                      </span>
-                    </button>
-                  </div>
-
-                  {% render 'localization-form',
-                    show_country: show_country,
-                    show_language: show_language,
-                    localization_style: 'drawer',
-                    form_style: form_style,
-                    form_id: block.id
-                  %}
-                </div>
-              </details>
-            </drawer-localization-component>
-          {% endif %}
         {%- endif -%}
       </div>
+
+      {% if data_header_drawer_type == 'mobile-drawer' and shop.customer_accounts_enabled %}
+        {% unless customer %}
+          <div class="menu-drawer__sign-in-section menu-drawer__animated-element" style="--menu-drawer-animation-index: {{ linklist.links.size | plus: 1 }};">
+            <a
+              href="{% if request.design_mode %}{{ routes.account_url }}{% else %}{{ routes.storefront_login_url }}{% endif %}"
+              class="menu-drawer__sign-in-button"
+            >
+              <span class="svg-wrapper menu-drawer__sign-in-icon">
+                <svg width="17" height="20" viewBox="0 0 17 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8.21801 8.4475C10.3781 8.4475 12.1293 6.69637 12.1293 4.53625C12.1293 2.37613 10.3781 0.625 8.21801 0.625C6.05789 0.625 4.30676 2.37613 4.30676 4.53625C4.30676 6.69637 6.05789 8.4475 8.21801 8.4475Z" stroke="white" stroke-width="1.25"/>
+                <path d="M1.35133 16.0434L0.729802 17.1613C0.659271 17.2886 0.623172 17.4321 0.625071 17.5776C0.626971 17.7231 0.666804 17.8656 0.740634 17.991C0.814464 18.1163 0.919735 18.2203 1.04605 18.2926C1.17236 18.3648 1.31533 18.4029 1.46085 18.4029H14.9753C15.1208 18.4029 15.2638 18.3648 15.3901 18.2926C15.5164 18.2203 15.6217 18.1163 15.6955 17.991C15.7693 17.8656 15.8092 17.7231 15.8111 17.5776C15.813 17.4321 15.7769 17.2886 15.7063 17.1613L15.0848 16.0434C14.4045 14.8188 13.4091 13.7984 12.2017 13.088C10.9943 12.3776 9.61894 12.0029 8.21807 12.0029C6.81719 12.0029 5.4418 12.3776 4.23443 13.088C3.02707 13.7984 2.03165 14.8188 1.35133 16.0434Z" stroke="white" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+              <span class="menu-drawer__sign-in-text">Sign In / Sign Up</span>
+              <span class="svg-wrapper icon-caret icon-caret--forward">
+                {{- 'icon-caret.svg' | inline_asset_content -}}
+              </span>
+            </a>
+          </div>
+        {% endunless %}
+      {% endif %}
 
       {% liquid
         if block_settings.menu_style == 'featured_collections'
@@ -761,6 +692,13 @@
 {% stylesheet %}
   .header__icon--menu {
     position: initial;
+    z-index: calc(var(--layer-menu-drawer) + 1);
+  }
+
+  @media screen and (min-width: 750px) {
+    .header--desktop header-menu + .header__drawer header-drawer {
+      display: none;
+    }
   }
 
   .menu-drawer-container .header__icon--summary {
@@ -777,61 +715,43 @@
     height: var(--icon-size-xs);
   }
 
-  .menu-drawer__featured-content {
-    z-index: var(--layer-base);
-    container-type: inline-size;
-  }
-
-  .menu-drawer__featured-content--childlist {
-    z-index: var(--layer-flat);
-  }
-
-  .menu-drawer__featured-content-list {
+  .header__drawer {
     display: flex;
-    gap: 1em;
-    overflow-x: auto;
-    padding-block-end: var(--padding-lg);
+    min-height: 60px;
+    align-items: center;
+
+    @media screen and (min-width: 750px) {
+      min-height: 0;
+    }
   }
 
-  .menu-drawer__featured-content-list-item {
-    flex: 0 0 auto;
-  }
-
-  .menu-drawer__featured-content-list-item--product {
-    width: 35cqi;
-  }
-
-  .menu-drawer__featured-content-list-item--collection img.resource-card__image {
-    width: 80cqi;
-  }
-
-  .menu-drawer__featured-content-list-item:first-child {
-    margin-inline-start: var(--margin-xl);
-  }
-
-  .menu-drawer__featured-content-list-item:last-child {
-    margin-inline-end: var(--margin-xl);
+  .header--compact .header__drawer {
+    min-height: var(--minimum-touch-target);
   }
 
   .menu-drawer__navigation {
     padding: 0;
+    padding-top: var(--header-height, 60px);
 
     @media screen and (min-width: 750px) {
+      padding-top: 0;
       margin-top: var(--drawer-header-desktop-top);
     }
   }
 
-  details:not(.menu-open) .header__icon--menu .header-drawer-icon--close {
+  details:not([open]) .header__icon--menu .header-drawer-icon--close {
     display: none;
   }
-
-  details.menu-open .header__icon--menu .header-drawer-icon--close {
+  span.svg-wrapper.header-drawer-icon{
+    color: black;
+  }
+  details[open] .header__icon--menu .header-drawer-icon--close {
     @media screen and (min-width: 750px) {
       display: none;
     }
   }
 
-  details.menu-open .header__icon--menu .header-drawer-icon--open {
+  details[open] .header__icon--menu .header-drawer-icon--open {
     display: none;
 
     @media screen and (min-width: 750px) {
@@ -844,8 +764,8 @@
     transform: translateX(-100%);
     visibility: hidden;
     height: var(--drawer-height);
-    width: var(--drawer-width);
-    max-width: var(--drawer-max-width);
+    width: 100vw;
+    max-width: 100vw;
     z-index: var(--layer-menu-drawer);
     left: 0;
     top: 0;
@@ -858,12 +778,16 @@
     flex-direction: column;
 
     @media screen and (min-width: 750px) {
-      width: 25rem;
+      width: var(--drawer-width);
+      max-width: var(--drawer-max-width);
+    }
+
+    .header__drawer--desktop & {
+      height: 100vh;
     }
   }
 
-  /* When opening a submenu we don't want the first-level menu to be scrollable, so we reset the overflow  */
-  .menu-drawer.menu-drawer--has-submenu-opened {
+  .menu-drawer:has(details[open]) {
     overflow: initial;
   }
 
@@ -877,6 +801,11 @@
     z-index: var(--layer-heightened);
     opacity: 0;
     transition: opacity var(--drawer-animation-speed) ease;
+    display: none;
+
+    @media screen and (min-width: 750px) {
+      display: block;
+    }
 
     .menu-open & {
       opacity: 1;
@@ -896,6 +825,27 @@
     opacity: 1;
     display: flex;
     flex-direction: column;
+    will-change: transform;
+    top: 60px;
+    padding-bottom: 120px;
+  }
+  .menu-drawer__menu-item {
+    border-bottom: solid 1px #F2F2F2;
+    padding: 16px 0!important;
+  }
+  .menu-drawer__list-item--deep:not(.menu-drawer__list-item--divider) .menu-drawer__menu{
+    padding-top: 15px;
+  }
+  .menu-drawer__menu-item--child {
+    border: none;
+    font-size: 14px !important;
+    padding: 6px 0!important;
+  }
+  .menu-drawer__submenu.has-submenu{
+    top: 0!important;
+  }
+  button.button.close-button.menu-drawer__close-button{
+    display: none;
   }
 
   .menu-drawer__inner-container {
@@ -939,7 +889,6 @@
 
   .menu-drawer__menu--grid {
     display: grid;
-    width: 100%;
     grid-template-columns: 1fr 1fr;
     gap: var(--padding-sm);
     padding-inline-end: var(--menu-drawer-inline-padding);
@@ -947,7 +896,7 @@
   }
 
   .menu-drawer__menu--childlist:not(.menu-drawer__menu--grid) {
-    flex-grow: 1;
+    flex-grow: 0;
   }
 
   .menu-drawer__menu.has-submenu,
@@ -1006,7 +955,7 @@
 
   .menu-drawer__list-item--flat .menu-drawer__menu--childlist {
     width: 100%;
-    padding-inline: 0;
+    padding-inline-start: 0;
   }
 
   .menu-drawer-container[open] .menu-drawer__animated-element {
@@ -1029,11 +978,16 @@
     width: 100%;
   }
 
+  .menu-drawer__menu accordion-custom details[open] summary .icon-caret--forward {
+    transform: rotate(90deg);
+  }
+
   .menu-drawer__list-item--divider .menu-drawer__menu-item:not(.menu-drawer__menu-item--child) {
     min-height: calc(2 * var(--padding-lg) + var(--icon-size-xs));
   }
 
   .menu-drawer__menu-item--mainlist {
+    --menu-top-level-font-size: 16px;
     min-height: calc(2 * var(--padding-lg) + var(--icon-size-xs));
     font-family: var(--menu-top-level-font-family);
     font-style: var(--menu-top-level-font-style);
@@ -1085,7 +1039,7 @@
 
   .menu-drawer__list-item--deep .menu-drawer__menu,
   .menu-drawer__menu--grandchildlist {
-    padding-inline: 0;
+    padding-inline-start: 0;
   }
 
   .menu-drawer__list-item--deep .menu-drawer__menu {
@@ -1154,8 +1108,8 @@
     top: auto;
     width: fit-content;
     height: fit-content;
-    color: inherit;
     padding: var(--padding-lg);
+    will-change: transform;
   }
 
   .menu-drawer__back-button {
@@ -1173,7 +1127,9 @@
     line-height: 1.2;
     box-shadow: none;
   }
-
+  .menu-drawer__sign-in-section.menu-drawer__animated-element{
+    padding: 0;
+  }
   .menu-drawer__menu-item-text {
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1193,7 +1149,7 @@
     width: fit-content;
     height: fit-content;
     margin: 0;
-    padding-block: var(--padding-lg);
+    padding-block: 0;
     padding-inline-start: var(--padding-xl);
     flex-shrink: 0;
   }
@@ -1205,6 +1161,13 @@
   .menu-drawer svg {
     width: var(--icon-size-xs);
     height: var(--icon-size-xs);
+  }
+
+  .menu-drawer .icon-caret svg,
+  .menu-drawer .icon-caret--forward svg,
+  .menu-drawer .icon-caret--backward svg {
+    width: 12px;
+    height: 20px;
   }
 
   .menu-drawer__submenu {
@@ -1234,6 +1197,126 @@
     margin-block: auto var(--padding-sm);
     margin-inline-start: var(--padding-xl);
     background-color: rgb(var(--color-foreground) 0.03);
+  }
+
+  .menu-drawer__sign-in-section {
+    padding: var(--padding-md) var(--padding-xl);
+    margin-top: auto;
+  }
+
+  .menu-drawer__sign-in-button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: var(--padding-md) var(--padding-lg);
+    background-color: #2E3365;
+    color: white;
+    text-decoration: none;
+    border-radius: 0;
+    font-weight: 500;
+    gap: var(--padding-sm);
+    transition: opacity 0.2s ease;
+  }
+
+  .menu-drawer__sign-in-button:hover,
+  .menu-drawer__sign-in-button:focus {
+    opacity: 0.9;
+    color: white;
+  }
+
+  .menu-drawer__sign-in-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    color: white;
+  }
+
+  .menu-drawer__sign-in-icon svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .menu-drawer__sign-in-text {
+    flex: 1;
+    text-align: start;
+    font-size: 16px;
+  }
+
+  .menu-drawer__sign-in-button .icon-caret {
+    flex-shrink: 0;
+  }
+
+  .menu-drawer__sign-in-button .icon-caret svg {
+    width: 12px;
+    height: 20px;
+    color: white;
+  }
+
+  .menu-drawer__mega-menu-featured {
+    padding: var(--padding-lg) var(--padding-xl);
+    margin-top: var(--padding-md);
+  }
+
+  .menu-drawer__mega-menu-featured-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--padding-md);
+    margin: 0;
+    padding: 0;
+  }
+
+  .menu-drawer__mega-menu-featured-item {
+    list-style: none;
+  }
+
+  .menu-drawer__mega-menu-featured-link {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .menu-drawer__mega-menu-featured-image {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: var(--menu-image-border-radius, 0);
+    overflow: hidden;
+    background-color: rgb(var(--color-foreground) / 0.05);
+  }
+
+  .menu-drawer__mega-menu-featured-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .menu-drawer__mega-menu-featured-image--placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(var(--color-foreground) / 0.05);
+  }
+
+  .menu-drawer__mega-menu-featured-image--placeholder svg {
+    width: 100%;
+    height: 100%;
+    opacity: 0.3;
+  }
+
+  .menu-drawer__mega-menu-featured-title {
+    margin-top: var(--padding-sm);
+    font-size: 0.875rem;
+    text-align: center;
+    color: var(--color-foreground);
+    line-height: 1.4;
+  }
+
+  .menu-drawer__mega-menu-featured-link:hover .menu-drawer__mega-menu-featured-title,
+  .menu-drawer__mega-menu-featured-link:focus .menu-drawer__mega-menu-featured-title {
+    text-decoration: underline;
   }
 
   .menu-drawer__account {
@@ -1291,117 +1374,5 @@
       opacity: 0;
       transform: translateX(-1rem);
     }
-  }
-
-  /* Drawer Localization Styles */
-  .drawer-localization__button .icon-flag {
-    width: var(--menu-localization-font-size, var(--icon-size-sm));
-    height: var(--menu-localization-font-size, var(--icon-size-sm));
-    clip-path: circle(50%); /* stylelint-disable-line */
-    background-position: center;
-    background-size: cover;
-    margin-inline-end: 4px;
-    position: relative;
-  }
-
-  .drawer-localization__button .icon-flag::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    box-shadow: inset 0 0 var(--size-shadow) var(--color-shadow);
-    border-radius: 50%;
-  }
-
-  .drawer-localization .country-filter {
-    padding-block: 8px;
-  }
-
-  .drawer-localization .drawer-localization__button {
-    display: flex;
-    padding: 0;
-    position: relative;
-    text-decoration: none;
-    height: 44px;
-
-    &:hover {
-      color: var(--color-foreground);
-    }
-  }
-
-  .drawer-localization .drawer-localization__button .icon-caret {
-    width: fit-content;
-    height: fit-content;
-    margin: 0;
-    padding: var(--padding-xl) var(--padding-xl) var(--padding-xl) var(--padding-xs);
-  }
-
-  .menu-drawer__localization:not(drawer-localization-component) .language-selector {
-    font-family: var(--menu-localization-font);
-    font-size: var(--menu-localization-font-size);
-  }
-
-  .menu-drawer__localization .language-selector.h5 {
-    padding-inline-start: 0;
-  }
-
-  .drawer-localization {
-    display: contents;
-    color: var(--color-foreground);
-  }
-
-  .drawer-localization localization-form-component {
-    position: relative;
-    height: 100%;
-  }
-
-  .drawer-localization .mobile-localization,
-  .drawer-localization .drawer-localization__button--label {
-    display: flex;
-    gap: var(--gap-xs);
-    margin-block: 0;
-    align-items: center;
-  }
-
-  .drawer-localization__button--label.h6 {
-    font-family: var(--menu-localization-font);
-  }
-
-  .drawer-localization img {
-    width: var(--icon-size-sm);
-  }
-
-  .drawer-localization .localization-button__icon,
-  .drawer-localization .localization-button__icon svg {
-    width: var(--icon-size-xs);
-    height: var(--icon-size-xs);
-  }
-
-  .drawer-localization summary.is-disabled {
-    pointer-events: none;
-  }
-
-  .drawer-localization .localization-wrapper {
-    width: 100%;
-  }
-
-  .drawer-localization .localization-form {
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-  }
-
-  .drawer-localization .localization-form > * {
-    padding-inline: var(--padding-xl);
-  }
-
-  .drawer-localization .language-selector .svg-wrapper.icon-caret {
-    transform: translateY(-50%) rotate(0deg);
-  }
-
-  .drawer-localization .language-selector .svg-wrapper.icon-caret svg {
-    transform: none;
   }
 {% endstylesheet %}
