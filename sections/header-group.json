@@ -108,6 +108,29 @@
     "header_section": {
       "type": "header",
       "blocks": {
+        "product_xtMTmH": {
+          "type": "product",
+          "settings": {
+            "title": "Skin care",
+            "content_display_type": "items",
+            "featured_image_1": "shopify://shop_images/Bashara_Skin_Issues_2.png",
+            "featured_title_1": "Sensitive Skin",
+            "featured_subtitle_1": "",
+            "featured_link_1": "shopify://collections/dry-skin-copy-copy",
+            "featured_title_2": "",
+            "featured_subtitle_2": "",
+            "featured_link_2": "",
+            "featured_title_3": "",
+            "featured_subtitle_3": "",
+            "featured_link_3": "",
+            "promo_collection": "dry-skin-copy-copy",
+            "collection_wrapper_column_span": 3,
+            "promo_collection_product_limit": 3,
+            "promo_collection_products_per_row": 3,
+            "mega-pane-columns": 6,
+            "mega_menu_items_per_column": 6
+          }
+        },
         "product_ftApLX": {
           "type": "product",
           "settings": {
@@ -117,14 +140,14 @@
             "featured_title_1": "Korean Skin Care",
             "featured_subtitle_1": "",
             "featured_link_1": "shopify://collections/dry-skin-copy-copy",
-            "featured_image_2": "shopify://shop_images/Image_Acne.png",
+            "featured_image_2": "shopify://shop_images/Bashara_Skin_Issues.png",
             "featured_title_2": "Acne",
             "featured_subtitle_2": "",
             "featured_link_2": "shopify://collections/acne",
-            "featured_image_3": "shopify://shop_images/Image_Jessica_R._1.png",
-            "featured_title_3": "jjj",
+            "featured_image_3": "shopify://shop_images/Image_Hero_image.png",
+            "featured_title_3": "Skin care",
             "featured_subtitle_3": "",
-            "featured_link_3": "",
+            "featured_link_3": "shopify://collections",
             "promo_collection": "best-sellers",
             "collection_wrapper_column_span": 4,
             "promo_collection_product_limit": 12,
@@ -135,6 +158,7 @@
         }
       },
       "block_order": [
+        "product_xtMTmH",
         "product_ftApLX"
       ],
       "settings": {
