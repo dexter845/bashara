@@ -846,9 +846,9 @@
       "settings": {
         "collection_list": [
           "acne",
-          "acne-copy",
           "dry-skin-copy",
           "dry-skin-copy-copy",
+          "acne-copy",
           "sensitive-skin-copy",
           "frontpage"
         ],
