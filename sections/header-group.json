@@ -111,7 +111,7 @@
         "product_ftApLX": {
           "type": "product",
           "settings": {
-            "title": "Catalog",
+            "title": "Best Sellers",
             "content_display_type": "items",
             "featured_image_1": "shopify://shop_images/Image_The_K-Beauty_Essentials.png",
             "featured_title_1": "Korean Skin Care",
@@ -130,7 +130,7 @@
             "promo_collection_product_limit": 12,
             "promo_collection_products_per_row": 4,
             "mega-pane-columns": 5,
-            "mega_menu_items_per_column": 20
+            "mega_menu_items_per_column": 6
           }
         }
       },
