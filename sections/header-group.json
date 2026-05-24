@@ -152,7 +152,7 @@
             "collection_wrapper_column_span": 4,
             "promo_collection_product_limit": 12,
             "promo_collection_products_per_row": 4,
-            "mega-pane-columns": 8,
+            "mega-pane-columns": 4,
             "mega_menu_items_per_column": 6
           }
         }
