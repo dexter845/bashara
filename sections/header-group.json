@@ -124,10 +124,10 @@
             "featured_subtitle_3": "",
             "featured_link_3": "",
             "promo_collection": "dry-skin-copy-copy",
-            "collection_wrapper_column_span": 3,
+            "collection_wrapper_column_span": 4,
             "promo_collection_product_limit": 3,
             "promo_collection_products_per_row": 3,
-            "mega-pane-columns": 6,
+            "mega-pane-columns": 8,
             "mega_menu_items_per_column": 6
           }
         },
