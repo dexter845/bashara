@@ -338,7 +338,7 @@
         "slide_GgyPWY"
       ],
       "custom_css": [
-        ".button {border-radius: 14px; padding: 14px 36px;}",
+        ".button:not(.slideshow-control) {border-radius: 14px; padding: 14px 36px;}",
         ".spacing-style.text-block {line-height: 1.6;}"
       ],
       "name": "t:names.slideshow_full_frame",
