@@ -403,11 +403,103 @@
             "padding-inline-end": 0
           },
           "blocks": {
+            "product_card_HnDeqW": {
+              "type": "product-card",
+              "name": "t:names.product_card",
+              "settings": {
+                "product": "2023-black-friday-sample-kit-for-all-orders-copy",
+                "product_card_gap": 4,
+                "inherit_color_scheme": true,
+                "color_scheme": "",
+                "width": "fit-content",
+                "custom_width": 100,
+                "width_mobile": "fit-content",
+                "custom_width_mobile": 100,
+                "border": "none",
+                "border_width": 1,
+                "border_opacity": 100,
+                "border_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {
+                "product_card_gallery_xczUKM": {
+                  "type": "_product-card-gallery",
+                  "settings": {
+                    "image_ratio": "adapt",
+                    "border": "none",
+                    "border_width": 1,
+                    "border_opacity": 100,
+                    "border_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                },
+                "product_title_dYQWKL": {
+                  "type": "product-title",
+                  "name": "t:names.product_title",
+                  "settings": {
+                    "width": "fit-content",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 4,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                },
+                "price_6nJwg4": {
+                  "type": "price",
+                  "name": "t:names.product_price",
+                  "settings": {
+                    "show_sale_price_first": true,
+                    "show_installments": false,
+                    "show_tax_info": false,
+                    "type_preset": "h6",
+                    "width": "100%",
+                    "alignment": "left",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "color": "var(--color-foreground)",
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "product_card_gallery_xczUKM",
+                "product_title_dYQWKL",
+                "price_6nJwg4"
+              ]
+            },
             "product_card_KrMf4K": {
               "type": "product-card",
               "name": "t:names.product_card",
               "settings": {
-                "product": "2024-aisha-s-the-glow-up-essentials",
+                "product": "advanced-snail-mucin-96-power-essence",
                 "product_card_gap": 4,
                 "inherit_color_scheme": true,
                 "color_scheme": "",
@@ -499,7 +591,7 @@
               "type": "product-card",
               "name": "t:names.product_card",
               "settings": {
-                "product": "2024-aisha-s-the-glow-up-essentials",
+                "product": "aha-bha-clarifying-treatment-toner",
                 "product_card_gap": 4,
                 "inherit_color_scheme": true,
                 "color_scheme": "",
@@ -591,7 +683,7 @@
               "type": "product-card",
               "name": "t:names.product_card",
               "settings": {
-                "product": "2024-aisha-s-the-glow-up-essentials",
+                "product": "2024-sharlas-everyday-skincare-routine",
                 "product_card_gap": 4,
                 "inherit_color_scheme": true,
                 "color_scheme": "",
@@ -602,7 +694,7 @@
                 "border": "none",
                 "border_width": 1,
                 "border_opacity": 100,
-                "border_radius": 0,
+                "border_radius": 5,
                 "padding-block-start": 0,
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
@@ -683,7 +775,7 @@
               "type": "product-card",
               "name": "t:names.product_card",
               "settings": {
-                "product": "2024-aisha-s-the-glow-up-essentials",
+                "product": "advanced-snail-radiance-dual-essence",
                 "product_card_gap": 4,
                 "inherit_color_scheme": true,
                 "color_scheme": "",
@@ -865,6 +957,7 @@
             }
           },
           "block_order": [
+            "product_card_HnDeqW",
             "product_card_KrMf4K",
             "product_card_W9bLPP",
             "product_card_4cQgQt",
@@ -910,7 +1003,7 @@
               "type": "_product-list-text",
               "name": "t:names.collection_title",
               "settings": {
-                "text": "<h3>{{ closest.collection.title }}</h3>",
+                "text": "<h3>Best Sellers</h3>",
                 "width": "fit-content",
                 "max_width": "normal",
                 "alignment": "left",
@@ -1157,7 +1250,7 @@
               "type": "text",
               "name": "t:names.text",
               "settings": {
-                "text": "<p>Find Your best brand</p>",
+                "text": "<h5>Find Your best brand</h5>",
                 "width": "fit-content",
                 "max_width": "normal",
                 "alignment": "left",
@@ -1355,7 +1448,7 @@
               "type": "text",
               "name": "t:names.heading",
               "settings": {
-                "text": "<h2>Shop by collection</h2>",
+                "text": "<h2>Shop by Skin issue</h2>",
                 "width": "fit-content",
                 "max_width": "normal",
                 "alignment": "left",
