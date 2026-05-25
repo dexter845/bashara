@@ -42,7 +42,7 @@
               "type": "text",
               "name": "t:names.heading",
               "settings": {
-                "text": "<h2>Glass Skin</h2>",
+                "text": "<h1>Glass Skin</h1>",
                 "width": "fit-content",
                 "max_width": "normal",
                 "alignment": "left",
@@ -67,7 +67,7 @@
             "text_iRwW7g": {
               "type": "text",
               "settings": {
-                "text": "<p>Authentic Korean Skin Care products To Provide you With A Glow That You Deserves. Stair Case Towards Glass Skin.</p>",
+                "text": "<h5>Authentic Korean Skin Care products To Provide you With A Glow That You Deserves. Stair Case Towards Glass Skin.</h5>",
                 "width": "fit-content",
                 "max_width": "normal",
                 "alignment": "left",
