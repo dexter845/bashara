@@ -1,0 +1,43 @@
+{%- doc -%}
+  @param {string} share_url - Full article URL
+  @param {string} share_title - URL-encoded article title
+{%- enddoc -%}
+
+<div class="bashara-article__share-bar">
+  <span class="bashara-article__share-label">Share this article:</span>
+  <div class="bashara-article__share-links">
+    <a
+      href="https://www.facebook.com/sharer/sharer.php?u={{ share_url | url_param_escape }}"
+      class="bashara-article__share-link"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Share on Facebook"
+    >
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+        <path d="M9.5 8.5H11.5L12 6H9.5V4.75C9.5 4.05 9.5 3.5 10.75 3.5H12V1.14C11.75 1.1 10.9 1 9.95 1 8 1 6.6 2.16 6.6 4.4V6H4.5V8.5H6.6V15H9.5V8.5Z"/>
+      </svg>
+    </a>
+    <a
+      href="https://twitter.com/intent/tweet?url={{ share_url | url_param_escape }}&text={{ share_title }}"
+      class="bashara-article__share-link"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Share on X"
+    >
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+        <path d="M9.52 7.18L15.36 0H14L8.48 6.24L4.08 0H0L6.12 8.88L0 16H1.36L7.2 9.82L11.92 16H16L9.52 7.18ZM7.6 9.02L6.96 8.08L1.92 1.04H4.08L8.16 6.68L8.8 7.62L14.08 15.04H11.92L7.6 9.02Z"/>
+      </svg>
+    </a>
+    <a
+      href="https://pinterest.com/pin/create/button/?url={{ share_url | url_param_escape }}&description={{ share_title }}"
+      class="bashara-article__share-link"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Share on Pinterest"
+    >
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+        <path d="M8 1C4.13 1 1 4.13 1 8c0 2.97 1.66 5.55 4.1 6.87-.06-.55-.11-1.4.02-2 0 0 .13-.53.4-1.68 0 0 .4-.13.92-.5 1.1-.62 1.84-1.58 2.06-2.78.18-.95.11-1.7-.2-2.28-.32-.58-.92-.88-1.62-.88-1.18 0-1.92.88-1.92 2.02 0 .75.28 1.26.72 1.66.08.07.09.14.06.22-.07.28-.22.88-.25 1-.04.16-.13.2-.3.12-1.12-.52-1.82-2.15-1.82-3.46 0-2.82 2.05-5.42 5.92-5.42 3.1 0 5.52 2.21 5.52 5.17 0 3.08-1.94 5.56-4.64 5.56-.91 0-1.76-.47-2.05-1.03 0 0-.45 1.72-.56 2.14-.2.78-.75 1.76-1.12 2.36.84.26 1.73.4 2.65.4 3.87 0 7-3.13 7-7S11.87 1 8 1Z"/>
+      </svg>
+    </a>
+  </div>
+</div>

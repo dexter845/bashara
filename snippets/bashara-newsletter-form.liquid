@@ -1,0 +1,44 @@
+{%- doc -%}
+  @param {string} section_id - Unique section id for form
+  @param {string} [button_class] - Extra button modifier class
+  @param {string} [placeholder] - Input placeholder
+  @param {string} [button_label] - Submit label
+  @param {string} [note] - Fine print below form
+{%- enddoc -%}
+
+{%- assign form_id = section_id | prepend: 'BasharaNewsletter-' -%}
+
+{%- form 'customer', class: 'bashara-newsletter-form-wrap', id: form_id -%}
+  <input type="hidden" name="contact[tags]" value="newsletter">
+  <input type="hidden" name="contact[id]" value="{{ form_id }}">
+
+  <div class="bashara-newsletter-form">
+    <input
+      type="email"
+      name="contact[email]"
+      class="bashara-newsletter-form__input"
+      placeholder="{{ placeholder | default: 'Enter your email' }}"
+      required
+      autocomplete="email"
+      {% if form.errors and form.id == form_id %}
+        aria-invalid="true"
+      {% endif %}
+    >
+
+    <button type="submit" class="bashara-newsletter-form__btn {{ button_class }}">
+      {{ button_label | default: 'Subscribe' }}
+    </button>
+  </div>
+
+  {%- if form.posted_successfully? and form.id == form_id -%}
+    <p class="bashara-newsletter-form__note" role="status">
+      {{ 'blocks.email_signup.success' | t | default: 'Thanks for subscribing!' }}
+    </p>
+  {%- elsif form.errors and form.id == form_id -%}
+    <p class="bashara-newsletter-form__note" role="alert">
+      {{ form.errors.messages.email | first }}
+    </p>
+  {%- elsif note != blank -%}
+    <p class="bashara-newsletter-form__note">{{ note }}</p>
+  {%- endif -%}
+{%- endform -%}

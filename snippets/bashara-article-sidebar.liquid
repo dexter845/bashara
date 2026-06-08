@@ -1,0 +1,71 @@
+{%- doc -%}
+  @param {object} blog - The blog object
+  @param {object} article - Current article (excluded from recent)
+  @param {boolean} [show_categories] - Show category list
+  @param {boolean} [show_recent] - Show recent posts
+  @param {boolean} [show_tags] - Show tag links
+{%- enddoc -%}
+
+<aside class="bashara-sidebar" aria-label="Blog sidebar">
+  {%- if show_categories and blog.all_tags.size > 0 -%}
+    <div class="bashara-sidebar__block">
+      <h2 class="bashara-sidebar__title">Category</h2>
+      <ul class="bashara-sidebar__list">
+        {%- for tag in blog.all_tags -%}
+          {%- assign tag_count = 0 -%}
+          {%- for tagged_article in blog.articles -%}
+            {%- if tagged_article.tags contains tag -%}
+              {%- assign tag_count = tag_count | plus: 1 -%}
+            {%- endif -%}
+          {%- endfor -%}
+          <li>
+            <a href="{{ blog.url }}/tagged/{{ tag | handle }}">
+              <span>{{ tag }}</span>
+              <span class="bashara-sidebar__count">{{ tag_count }}</span>
+            </a>
+          </li>
+        {%- endfor -%}
+      </ul>
+    </div>
+  {%- endif -%}
+
+  {%- if show_recent -%}
+    <div class="bashara-sidebar__block">
+      <h2 class="bashara-sidebar__title">Recent posts</h2>
+      <div class="bashara-sidebar__recent">
+        {%- assign recent_count = 0 -%}
+        {%- for recent in blog.articles -%}
+          {%- if recent.id != article.id -%}
+            <a href="{{ recent.url }}" class="bashara-sidebar__recent-item">
+              <div class="bashara-sidebar__recent-thumb">
+                {%- if recent.image -%}
+                  {{
+                    recent.image
+                    | image_url: width: 180
+                    | image_tag: loading: 'lazy', widths: '90, 180', alt: recent.title
+                  }}
+                {%- endif -%}
+              </div>
+              <p class="bashara-sidebar__recent-title">{{ recent.title }}</p>
+            </a>
+            {%- assign recent_count = recent_count | plus: 1 -%}
+            {%- if recent_count >= 3 -%}
+              {%- break -%}
+            {%- endif -%}
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  {%- endif -%}
+
+  {%- if show_tags and blog.all_tags.size > 0 -%}
+    <div class="bashara-sidebar__block">
+      <h2 class="bashara-sidebar__title">Tags</h2>
+      <div class="bashara-sidebar__tags">
+        {%- for tag in blog.all_tags -%}
+          <a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="bashara-sidebar__tag">{{ tag }}</a>
+        {%- endfor -%}
+      </div>
+    </div>
+  {%- endif -%}
+</aside>

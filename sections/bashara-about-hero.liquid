@@ -1,0 +1,75 @@
+{{ 'bashara-pages.css' | asset_url | stylesheet_tag }}
+
+{%- assign s = section.settings -%}
+
+<div class="section-background color-{{ s.color_scheme }}"></div>
+<section class="section color-{{ s.color_scheme }} bashara-page bashara-about-hero">
+  {%- if s.image != blank -%}
+    <div class="bashara-about-hero__media">
+      {{
+        s.image
+        | image_url: width: 2000
+        | image_tag:
+          loading: 'eager',
+          widths: '800, 1200, 1600, 2000',
+          sizes: '100vw',
+          alt: s.image.alt | default: s.heading
+      }}
+    </div>
+  {%- endif -%}
+  <div class="bashara-about-hero__overlay"></div>
+  <div class="bashara-about-hero__content">
+    {%- if s.eyebrow != blank -%}
+      <p class="bashara-eyebrow bashara-eyebrow--light">{{ s.eyebrow | escape }}</p>
+    {%- endif -%}
+    {%- if s.heading != blank -%}
+      <h1 class="bashara-heading-xl">{{ s.heading | escape }}</h1>
+    {%- endif -%}
+    {%- if s.description != blank -%}
+      <p class="bashara-about-hero__desc">{{ s.description | escape }}</p>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Bashara About Hero",
+  "class": "section-wrapper",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background image"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "OUR STORY"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Beauty Rooted in Korean Wisdom"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "GLOWRA was born from a simple belief: that everyone deserves skin that glows with health and confidence. Inspired by Korean beauty rituals passed down through generations, we've created a modern skincare line that honors tradition while embracing innovation."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Bashara About Hero"
+    }
+  ]
+}
+{% endschema %}

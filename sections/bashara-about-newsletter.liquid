@@ -1,0 +1,83 @@
+{{ 'bashara-pages.css' | asset_url | stylesheet_tag }}
+
+{%- assign s = section.settings -%}
+
+<div class="section-background color-{{ s.color_scheme }}"></div>
+<section class="section color-{{ s.color_scheme }} bashara-page bashara-about-newsletter">
+  <div class="bashara-about-newsletter__inner">
+    <div class="bashara-about-newsletter__content">
+      {%- if s.eyebrow != blank -%}
+        <p class="bashara-about-newsletter__eyebrow">{{ s.eyebrow | escape }}</p>
+      {%- endif -%}
+      {%- if s.heading != blank -%}
+        <h2 class="bashara-about-newsletter__title">{{ s.heading | escape }}</h2>
+      {%- endif -%}
+      {%- if s.description != blank -%}
+        <p class="bashara-about-newsletter__desc">{{ s.description | escape }}</p>
+      {%- endif -%}
+      {% render 'bashara-newsletter-form',
+        section_id: section.id,
+        button_class: 'bashara-newsletter-form__btn--dark',
+        placeholder: s.placeholder,
+        button_label: s.button_label,
+        note: s.note
+      %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Bashara About Newsletter",
+  "class": "section-wrapper",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "JOIN THE RITUAL"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Skincare Wisdom, Delivered."
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Get 10% off your first order + exclusive skin tips from our experts."
+    },
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "Email placeholder",
+      "default": "Enter your email"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Subscribe"
+    },
+    {
+      "type": "text",
+      "id": "note",
+      "label": "Fine print",
+      "default": "No spam. Unsubscribe anytime."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Bashara About Newsletter"
+    }
+  ]
+}
+{% endschema %}

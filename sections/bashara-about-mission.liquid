@@ -1,0 +1,38 @@
+{{ 'bashara-pages.css' | asset_url | stylesheet_tag }}
+
+{%- assign s = section.settings -%}
+
+<div class="section-background color-{{ s.color_scheme }}"></div>
+<section class="section color-{{ s.color_scheme }} bashara-page bashara-about-mission">
+  <div class="bashara-page__inner">
+    {%- if s.quote != blank -%}
+      <blockquote class="bashara-about-mission__quote">{{ s.quote | escape }}</blockquote>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Bashara About Mission",
+  "class": "section-wrapper",
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "quote",
+      "label": "Mission quote",
+      "default": "We believe skincare should be a ritual of self-care — gentle, intentional, and rooted in ingredients that nature provides."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Bashara About Mission"
+    }
+  ]
+}
+{% endschema %}
