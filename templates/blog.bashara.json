@@ -12,6 +12,7 @@
     "main": {
       "type": "bashara-blog",
       "settings": {
+        "hero_image": "shopify://shop_images/c306abd24f8bd5119f0f307869a7efbead739676.jpg",
         "eyebrow": "SKINCARE INSIGHTS",
         "heading": "The GLOWRA BLOG",
         "description": "Expert tips, product guides, and the latest in Korean beauty trends from our team of skincare specialists.",
