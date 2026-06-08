@@ -11,6 +11,9 @@
   "sections": {
     "main": {
       "type": "bashara-blog",
+      "custom_css": [
+        "textarea, input:not([type=checkbox],[type=radio]) {background: transparent;}"
+      ],
       "settings": {
         "hero_image": "shopify://shop_images/c306abd24f8bd5119f0f307869a7efbead739676.jpg",
         "eyebrow": "SKINCARE INSIGHTS",
