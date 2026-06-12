@@ -15,7 +15,7 @@
         "image": "shopify://shop_images/7cc5d7c8b19b6b16604f0390d021a34ffae4c564.jpg",
         "eyebrow": "OUR STORY",
         "heading": "Beauty Rooted in Korean Wisdom",
-        "description": "GLOWRA was born from a simple belief: that everyone deserves skin that glows with health and confidence. Inspired by Korean beauty rituals passed down through generations, we've created a modern skincare line that honors tradition while embracing innovation.",
+        "description": "BASHARA was born from a simple belief: that everyone deserves skin that glows with health and confidence. Inspired by Korean beauty rituals passed down through generations, we've created a modern skincare line that honors tradition while embracing innovation.",
         "color_scheme": "scheme-1"
       }
     },
@@ -24,7 +24,7 @@
       "settings": {
         "eyebrow": "OUR MISSION",
         "heading": "Transforming Skincare, One Glow at a Time",
-        "body": "<p>At GLOWRA, we believe that beautiful skin starts with understanding. That's why we've dedicated ourselves to creating products that not only deliver results but also educate and empower our community.</p><p>Every formula is crafted with care, using clinically-proven ingredients sourced from nature. We combine the best of Korean beauty traditions with modern dermatological science to create products that work in harmony with your skin.</p><p>Our commitment extends beyond skincare. We're dedicated to sustainability, ethical sourcing, and giving back to communities around the world.</p>",
+        "body": "<p>At BASHARA, we believe that beautiful skin starts with understanding. That's why we've dedicated ourselves to creating products that not only deliver results but also educate and empower our community.</p><p>Every formula is crafted with care, using clinically-proven ingredients sourced from nature. We combine the best of Korean beauty traditions with modern dermatological science to create products that work in harmony with your skin.</p><p>Our commitment extends beyond skincare. We're dedicated to sustainability, ethical sourcing, and giving back to communities around the world.</p>",
         "image": "shopify://shop_images/img_4.png",
         "stat_value": "10M+",
         "stat_label": "Happy Customers Worldwide",
@@ -83,7 +83,7 @@
           "settings": {
             "year": "2020",
             "title": "The Beginning",
-            "text": "GLOWRA was founded with a mission to bring Korean skincare wisdom to everyone."
+            "text": "BASHARA was founded with a mission to bring Korean skincare wisdom to everyone."
           }
         },
         "milestone_2": {
@@ -99,7 +99,7 @@
           "settings": {
             "year": "2023",
             "title": "Global Expansion",
-            "text": "GLOWRA expanded to 20 countries, bringing K-beauty to a worldwide audience."
+            "text": "BASHARA expanded to 20 countries, bringing K-beauty to a worldwide audience."
           }
         },
         "milestone_4": {
@@ -128,7 +128,7 @@
       ],
       "settings": {
         "eyebrow": "OUR JOURNEY",
-        "heading": "The GLOWRA Story",
+        "heading": "The BASHARA Story",
         "color_scheme": "scheme-1"
       }
     },
