@@ -1833,6 +1833,17 @@
         "gap_between_elements": 9
       }
     },
+    "bashara_about_hero_jKR4Pn": {
+      "type": "bashara-about-hero",
+      "name": "Bashara About Hero",
+      "settings": {
+        "image": "shopify://shop_images/7cc5d7c8b19b6b16604f0390d021a34ffae4c564.jpg",
+        "eyebrow": "OUR STORY",
+        "heading": "Beauty Rooted in Korean Wisdom",
+        "description": "Bashara was born from a simple belief: that everyone deserves skin that glows with health and confidence. Inspired by Korean beauty rituals passed down through generations, we've created a modern skincare line that honors tradition while embracing innovation.",
+        "color_scheme": ""
+      }
+    },
     "testimonials_CDbgE9": {
       "type": "testimonials",
       "blocks": {
@@ -2392,6 +2403,7 @@
     "collection_list_ixbez9",
     "collection_list_yjEpVa",
     "marquee_GKQWDi",
+    "bashara_about_hero_jKR4Pn",
     "testimonials_CDbgE9",
     "custom_icons_with_text_c6FE6n"
   ]
